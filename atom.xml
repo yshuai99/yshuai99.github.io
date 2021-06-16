@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2021-06-16T23:20:02.484Z</updated>
+    <updated>2021-06-16T23:38:21.297Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -10,6 +10,154 @@
     <logo>https://yshuai99.github.io/images/avatar.png</logo>
     <icon>https://yshuai99.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, yshuai</rights>
+    <entry>
+        <title type="html"><![CDATA[Golden Cross strategy (In Progress)]]></title>
+        <id>https://yshuai99.github.io/post/golden-cross-strategy-in-progress/</id>
+        <link href="https://yshuai99.github.io/post/golden-cross-strategy-in-progress/">
+        </link>
+        <updated>2021-06-16T12:23:13.000Z</updated>
+        <summary type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
+<!-- more -->
+<p>The strategy is based on python 3.6 and jqdata module (joinquant.com)</p>
+<h1 id="core-ideas">Core ideas</h1>
+<ul>
+<li>If the stock has a upwarding trend, buy it. If the stock has a downwarding trend, then sell it.</li>
+<li>If close price is larger than the average close price of past five days, buy it. If close price is smaller than the average close price of past five days, then sell it.</li>
+</ul>
+<h1 id="code">Code</h1>
+<pre><code class="language-python">import jqdata
+
+def initialize(context):
+    # Set Pingan Bank as trading stock
+    g.security = '000001.XSHE'
+    # Set benchmark index as HS300
+    set_benchmark('000300.XSHG')
+    # Adjust with real price
+    set_option('use_real_price',True)
+    # Trade daily
+    run_daily(market_open,time = 'every_bar')
+    
+def market_open(context):
+    security = g.security
+    close_data = attribute_history(security,5,'1d',['close'])
+    MA5 = close_data['close'].mean()
+    current_price = close_data['close'][-1]
+    cash = context.portfolio.available_cash
+    
+    # If the price is larger than average price, buy it.
+    if current_price &gt; 1.01*MA5:
+        order_value(security,cash)
+        log.info('Buying %s' % (security))
+    # If  the price is smaller than average price, sell it.
+    elif current_price &lt; MA5 and 
+    context.portfolio.positions[security].closeable_amount &gt; 0:
+        order_target(security,0)
+        log.info('Selling %s' % (security))
+    record(stock_price = current_price)
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Three Golden Cross strategies (In Progress)]]></title>
+        <id>https://yshuai99.github.io/post/three-golden-cross-strategies-in-progress/</id>
+        <link href="https://yshuai99.github.io/post/three-golden-cross-strategies-in-progress/">
+        </link>
+        <updated>2021-06-16T12:23:13.000Z</updated>
+        <summary type="html"><![CDATA[<p>Here is three kinds of golden cross strategies.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Here is three kinds of golden cross strategies.</p>
+<!-- more -->
+<p>The strategy is based on python 3.6 and jqdata module (joinquant.com)</p>
+<h1 id="golden-cross-1">Golden Cross 1</h1>
+<h2 id="core-ideas">Core ideas</h2>
+<ul>
+<li>If the stock has a upwarding trend, buy it. If the stock has a downwarding trend, then sell it.</li>
+<li>If close price is larger than the average close price of past five days, buy it. If close price is smaller than the average close price of past five days, then sell it.</li>
+</ul>
+<h2 id="code">Code</h2>
+<pre><code class="language-python">import jqdata
+
+def initialize(context):
+    # Set Pingan Bank as trading stock
+    g.security = '000001.XSHE'
+    # Set benchmark index as HS300
+    set_benchmark('000300.XSHG')
+    # Adjust with real price
+    set_option('use_real_price',True)
+    # Trade daily
+    run_daily(market_open,time = 'every_bar')
+    
+def market_open(context):
+    security = g.security
+    close_data = attribute_history(security,5,'1d',['close'])
+    MA5 = close_data['close'].mean()
+    current_price = close_data['close'][-1]
+    cash = context.portfolio.available_cash
+    
+    # If the price is larger than average price, buy it.
+    if current_price &gt; 1.01*MA5:
+        order_value(security,cash)
+        log.info('Buying %s' % (security))
+    # If  the price is smaller than average price, sell it.
+    elif current_price &lt; MA5 and 
+    context.portfolio.positions[security].closeable_amount &gt; 0:
+        order_target(security,0)
+        log.info('Selling %s' % (security))
+    record(stock_price = current_price)
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Golden Cross strategy ]]></title>
+        <id>https://yshuai99.github.io/post/golden-cross-strategy/</id>
+        <link href="https://yshuai99.github.io/post/golden-cross-strategy/">
+        </link>
+        <updated>2021-06-16T01:23:13.000Z</updated>
+        <summary type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
+<!-- more -->
+<p>The strategy is based on python 3.6 and jqdata module (joinquant.com)</p>
+<h1 id="core-ideas">Core ideas</h1>
+<ul>
+<li>If the stock has a upwarding trend, buy it. If the stock has a downwarding trend, then sell it.</li>
+<li>If close price is larger than the average close price of past five days, buy it. If close price is smaller than the average close price of past five days, then sell it.</li>
+</ul>
+<h1 id="code">Code</h1>
+<pre><code class="language-python">import jqdata
+
+def initialize(context):
+    # Set Pingan Bank as trading stock
+    g.security = '000001.XSHE'
+    # Set benchmark index as HS300
+    set_benchmark('000300.XSHG')
+    # Adjust with real price
+    set_option('use_real_price',True)
+    # Trade daily
+    run_daily(market_open,time = 'every_bar')
+    
+def market_open(context):
+    security = g.security
+    close_data = attribute_history(security,5,'1d',['close'])
+    MA5 = close_data['close'].mean()
+    current_price = close_data['close'][-1]
+    cash = context.portfolio.available_cash
+    
+    # If the price is larger than average price, buy it.
+    if current_price &gt; 1.01*MA5:
+        order_value(security,cash)
+        log.info('Buying %s' % (security))
+    # If  the price is smaller than average price, sell it.
+    elif current_price &lt; MA5 and 
+    context.portfolio.positions[security].closeable_amount &gt; 0:
+        order_target(security,0)
+        log.info('Selling %s' % (security))
+    record(stock_price = current_price)
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Basic MACD Strategy (IN PROGRESS)]]></title>
         <id>https://yshuai99.github.io/post/basic/</id>

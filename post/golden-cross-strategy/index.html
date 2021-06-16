@@ -5,7 +5,7 @@
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>
-    The performance of macroeconomic factors timing in Chinese stock market (IN PROGRESS) | yshuai
+    Golden Cross strategy  | yshuai
 </title>
 <link rel="shortcut icon" href="https://yshuai99.github.io/favicon.ico?v=1623886698198">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
@@ -106,45 +106,72 @@
                 <div id="content" class="main-container-left">
                     <article class="post i-card">
                         <h2 class="post-title">
-                            The performance of macroeconomic factors timing in Chinese stock market (IN PROGRESS)
+                            Golden Cross strategy 
                         </h2>
                         <div class="post-info">
-                            <time class="post-time">2021-06-11</time>
+                            <time class="post-time">2021-06-15</time>
                             
                                 <a href="https://yshuai99.github.io/tag/AH91WmPtY/" class="post-tag i-tag
-                            i-tag-success">
+                            i-tag-banana">
                             #Quantative Trading
                         </a>
                                 
                         </div>
                         
-                            <div class="post-feature-image" style="background-image: url('https://yshuai99.github.io/post-images/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market.jpg')"></div>
-                            
                                 <div class="post-content">
-                                    <p>This blog analysis the performance of 9 macroeconomic factors timing strategy in Chinese stock market</p>
+                                    <p>Here is the simple golden cross strategy.</p>
 <!-- more -->
-<h1 id="key-points">Key points</h1>
+<p>The strategy is based on python 3.6 and jqdata module (joinquant.com)</p>
+<h1 id="core-ideas">Core ideas</h1>
 <ul>
-<li>I analyze the macroeconomic factors timing strategy in Chinese stock market and find that the single macroeconomic factor is not a good index to long/short Chinese stock market index. However, the 9 macroeconomic factors together is a good indicator to the Chinese stock maket.</li>
-<li>The 9 macroeconomic factors are from 5 main aspects of macroeconomic (Economic growth, Interest rate, Credit, Inflation and Exchange rate) and the factor timing strategy is based on the technological analysis tools: Bollinger Bands, Moving averages, etc.</li>
+<li>If the stock has a upwarding trend, buy it. If the stock has a downwarding trend, then sell it.</li>
+<li>If close price is larger than the average close price of past five days, buy it. If close price is smaller than the average close price of past five days, then sell it.</li>
 </ul>
-<p>The idea of this blog is inspired by the Yujie Chu, the senior manager of Baofu Internet Technology. The data and python API was provided by Joinquant platform (joinquant.com).</p>
-<h1 id="macroeconomic-factors">Macroeconomic factors</h1>
-<h2 id="pmi">PMI</h2>
-<p>The Purchasing Managers' Index (PMI) is an index of the prevailing direction of economic trends in the manufacturing and service sectors. Its purpose is to provide information about current and future business conditions to company decision makers, analysts, and investors. The PMI is based on a monthly survey sent to senior executives and it is complied and released monthly.</p>
-<p>The headline PMI is a number from 0 to 100. A PMI above 50 represents an expansion when compared with the previous month. A PMI reading under 50 represents a contraction, and a reading at 50 indicates no change. The further away from 50 indicating the greater the level of change.</p>
-<blockquote>
-<p>Investors can also use the PMI to their advantage because it is a leading indicator of economic conditions. The direction of the trend in the PMI tends to precede changes in the trend in major estimates of economic activity and output, such as the GDP, Industrial Production, and Employment. Paying attention to the value and movements in the PMI can yield profitable foresight into developing trends in the overall economy.  (investopedia.com)</p>
-</blockquote>
-<h2 id="shibor">SHIBOR</h2>
-<p>The Shanghai Interbank Offered Rate is a  wholesale interest rate calculated by arithmetically averaging all the interbank RMB lending rates offered by the price quotation group of banks with a high credit rating. In this article, the SHIBOR with 1-month maturity is used, as it is reflect the pricing of middle and short term interest rate pricing and it has lower noise than the overnight interbank RMB lending rates.</p>
-<h2 id="yield-spread">Yield Spread</h2>
-<p>Yield spread is the difference between the quoted rate of return on different debt instruments.</p>
+<h1 id="code">Code</h1>
+<pre><code class="language-python">import jqdata
+
+def initialize(context):
+    # Set Pingan Bank as trading stock
+    g.security = '000001.XSHE'
+    # Set benchmark index as HS300
+    set_benchmark('000300.XSHG')
+    # Adjust with real price
+    set_option('use_real_price',True)
+    # Trade daily
+    run_daily(market_open,time = 'every_bar')
+    
+def market_open(context):
+    security = g.security
+    close_data = attribute_history(security,5,'1d',['close'])
+    MA5 = close_data['close'].mean()
+    current_price = close_data['close'][-1]
+    cash = context.portfolio.available_cash
+    
+    # If the price is larger than average price, buy it.
+    if current_price &gt; 1.01*MA5:
+        order_value(security,cash)
+        log.info('Buying %s' % (security))
+    # If  the price is smaller than average price, sell it.
+    elif current_price &lt; MA5 and 
+    context.portfolio.positions[security].closeable_amount &gt; 0:
+        order_target(security,0)
+        log.info('Selling %s' % (security))
+    record(stock_price = current_price)
+</code></pre>
 
                                 </div>
                     </article>
                     <!--  -->
                     
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://yshuai99.github.io/post/basic/">
+                                <h3 class="post-title">
+                                    Basic MACD Strategy (IN PROGRESS)
+                                </h3>
+                            </a>
+                        </div>
+                        
                             <div id="disqus_thread"></div>
                             <div id="gitalk-container"></div>
                 </div>
@@ -159,14 +186,8 @@
         <div class="toc-title i-card-title">目录</div>
         <div class="toc-content">
             <ul class="markdownIt-TOC">
-<li><a href="#key-points">Key points</a></li>
-<li><a href="#macroeconomic-factors">Macroeconomic factors</a>
-<ul>
-<li><a href="#pmi">PMI</a></li>
-<li><a href="#shibor">SHIBOR</a></li>
-<li><a href="#yield-spread">Yield Spread</a></li>
-</ul>
-</li>
+<li><a href="#core-ideas">Core ideas</a></li>
+<li><a href="#code">Code</a></li>
 </ul>
 
         </div>
