@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2021-06-16T23:19:50.709Z</updated>
+    <updated>2021-06-16T23:20:02.484Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -11,11 +11,11 @@
     <icon>https://yshuai99.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, yshuai</rights>
     <entry>
-        <title type="html"><![CDATA[Basic MACD Strategies (IN PROGRESS)]]></title>
+        <title type="html"><![CDATA[Basic MACD Strategy (IN PROGRESS)]]></title>
         <id>https://yshuai99.github.io/post/basic/</id>
         <link href="https://yshuai99.github.io/post/basic/">
         </link>
-        <updated>2021-06-16T00:56:29.000Z</updated>
+        <updated>2021-06-15T13:56:29.000Z</updated>
         <summary type="html"><![CDATA[<p>This is a MACD strategy based on python 3.6.</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>This is a MACD strategy based on python 3.6.</p>
