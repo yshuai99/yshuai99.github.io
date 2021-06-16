@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2021-06-15T23:58:23.207Z</updated>
+    <updated>2021-06-16T00:01:46.198Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -15,7 +15,7 @@
         <id>https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market/</id>
         <link href="https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market/">
         </link>
-        <updated>2021-06-15T11:54:41.000Z</updated>
+        <updated>2021-06-15T00:54:41.000Z</updated>
         <content type="html"><![CDATA[<h1 id="key-points">Key points</h1>
 <ul>
 <li>I analyze the macroeconomic factors timing strategy in Chinese stock makter and find that the single macroeconomic factor is not a good index to long/short Chinese stock market index. However, the 9 macroeconomic factors together is a good indicator to the Chinese stock maket.</li>
