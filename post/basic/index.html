@@ -5,7 +5,7 @@
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>
-    The performance of macroeconomic factors timing in Chinese stock market (IN PROGRESS) | yshuai
+    Basic MACD Strategies (IN PROGRESS) | yshuai
 </title>
 <link rel="shortcut icon" href="https://yshuai99.github.io/favicon.ico?v=1623885551454">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
@@ -106,45 +106,163 @@
                 <div id="content" class="main-container-left">
                     <article class="post i-card">
                         <h2 class="post-title">
-                            The performance of macroeconomic factors timing in Chinese stock market (IN PROGRESS)
+                            Basic MACD Strategies (IN PROGRESS)
                         </h2>
                         <div class="post-info">
-                            <time class="post-time">2021-06-11</time>
+                            <time class="post-time">2021-06-15</time>
                             
                                 <a href="https://yshuai99.github.io/tag/AH91WmPtY/" class="post-tag i-tag
-                            i-tag-other_1">
+                            i-tag-other_2">
                             #Quantative Trading
                         </a>
                                 
                         </div>
                         
-                            <div class="post-feature-image" style="background-image: url('https://yshuai99.github.io/post-images/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market.jpg')"></div>
-                            
                                 <div class="post-content">
-                                    <p>This blog analysis the performance of 9 macroeconomic factors timing strategy in Chinese stock market</p>
+                                    <p>This is a MACD strategy based on python 3.6.</p>
 <!-- more -->
-<h1 id="key-points">Key points</h1>
-<ul>
-<li>I analyze the macroeconomic factors timing strategy in Chinese stock market and find that the single macroeconomic factor is not a good index to long/short Chinese stock market index. However, the 9 macroeconomic factors together is a good indicator to the Chinese stock maket.</li>
-<li>The 9 macroeconomic factors are from 5 main aspects of macroeconomic (Economic growth, Interest rate, Credit, Inflation and Exchange rate) and the factor timing strategy is based on the technological analysis tools: Bollinger Bands, Moving averages, etc.</li>
-</ul>
-<p>The idea of this blog is inspired by the Yujie Chu, the senior manager of Baofu Internet Technology. The data and python API was provided by Joinquant platform (joinquant.com).</p>
-<h1 id="macroeconomic-factors">Macroeconomic factors</h1>
-<h2 id="pmi">PMI</h2>
-<p>The Purchasing Managers' Index (PMI) is an index of the prevailing direction of economic trends in the manufacturing and service sectors. Its purpose is to provide information about current and future business conditions to company decision makers, analysts, and investors. The PMI is based on a monthly survey sent to senior executives and it is complied and released monthly.</p>
-<p>The headline PMI is a number from 0 to 100. A PMI above 50 represents an expansion when compared with the previous month. A PMI reading under 50 represents a contraction, and a reading at 50 indicates no change. The further away from 50 indicating the greater the level of change.</p>
-<blockquote>
-<p>Investors can also use the PMI to their advantage because it is a leading indicator of economic conditions. The direction of the trend in the PMI tends to precede changes in the trend in major estimates of economic activity and output, such as the GDP, Industrial Production, and Employment. Paying attention to the value and movements in the PMI can yield profitable foresight into developing trends in the overall economy.  (investopedia.com)</p>
-</blockquote>
-<h2 id="shibor">SHIBOR</h2>
-<p>The Shanghai Interbank Offered Rate is a  wholesale interest rate calculated by arithmetically averaging all the interbank RMB lending rates offered by the price quotation group of banks with a high credit rating. In this article, the SHIBOR with 1-month maturity is used, as it is reflect the pricing of middle and short term interest rate pricing and it has lower noise than the overnight interbank RMB lending rates.</p>
-<h2 id="yield-spread">Yield Spread</h2>
-<p>Yield spread is the difference between the quoted rate of return on different debt instruments.</p>
+<p>This strategies is developed based on Joinquant module (joinquant.com).</p>
+<h1 id="moving-average-convergence-divergence">Moving Average Convergence Divergence</h1>
+<pre><code class="language-python">import pandas as pd
+import numpy as np
+import talib
+import jqdata #import jq module
+
+
+
+def initialize(context):
+    set_params()
+    set_backtest()
+    run_daily(trade, 'every_bar')
+
+def set_params():
+    g.days=0    
+    g.refresh_rate=10 
+
+def set_backtest():
+    set_benchmark('000905.XSHG') 
+    set_option('use_real_price', True)  
+    log.set_level('order', 'error')
+
+
+def before_trading_start(context):
+    set_slip_fee(context)
+
+# Set slippage
+def set_slip_fee(context):
+    set_slippage(FixedSlippage(0.02)) 
+
+    dt=context.current_dt
+    if dt&gt;datetime.datetime(2013,1, 1):
+        set_order_cost(OrderCost(open_tax=0, close_tax=0.001,                         open_commission=0.0003, 
+        close_commission=0.0003, 
+        close_today_commission=0, min_commission=5), type='stock')
+    else:
+        set_order_cost(OrderCost(open_tax=0, open_commission=0.003,                   close_commission=0.003,
+        close_tax=0.001,min_commission=5), 
+        type='stock')
+
+# Filter for stocks of delisting,  special treatment and paused.
+def paused_filter(security_list):
+    current_data = get_current_data()
+    security_list = [stock for stock in security_list if not current_data[stock].paused]
+    return security_list
+
+
+def delisted_filter(security_list):
+    current_data = get_current_data()
+    security_list = [stock for stock in security_list if not '退' in current_data[stock].name]
+    return security_list
+
+def st_filter(security_list):
+    current_data = get_current_data()
+    security_list = [stock for stock in security_list if not current_data[stock].is_st]
+    return security_list
+
+#######Operation process####### 
+def trade(context):
+    #Get the fundamental data
+    stock_to_choose = get_fundamentals(query(
+        valuation.code, valuation.pe_ratio, 
+        valuation.pb_ratio,valuation.market_cap, 
+        indicator.eps, indicator.inc_net_profit_annual
+    #Filter for some basic conditions
+    ).filter(
+        valuation.pe_ratio &lt; 40,
+        valuation.pe_ratio &gt; 10,
+        indicator.eps &gt; 0.3,
+        indicator.inc_net_profit_annual &gt; 0.30,
+        indicator.roe &gt; 15
+    ).order_by(
+        valuation.pb_ratio.asc()
+    ).limit(
+        50), date=None)
+
+    stockpool = list(stock_to_choose['code'])
+    stockpool = paused_filter(stockpool)
+    stockpool = delisted_filter(stockpool)
+    stockpool = st_filter(stockpool)
+
+    long_list = []
+    short_list = []
+    hold = []
+
+#If it is the date to trade
+    if g.days%g.refresh_rate == 0:
+        for stock in stockpool:
+            prices = attribute_history(stock,300, '1d',['close'])
+            price = array(prices['close'])
+            # Use talib module to calculate the MACD directly
+            macd_tmp = talib.MACD(price, fastperiod=12, slowperiod=26,signalperiod=20)
+            DIF = macd_tmp[0]
+            DEA = macd_tmp[1]
+            MACD = macd_tmp[2]
+
+            #判断MACD走向
+            if MACD[-1] &gt; 0 and MACD[-4] &lt; 0:
+                long_list.append(stock)
+            elif MACD[-1] &lt; 0 and MACD[-4] &gt; 0:
+                short_list.append(stock)
+
+
+
+        stockset = list(context.portfolio.positions.keys())
+
+        for stock in stockset:
+            if stock in short_list:
+                order_target_value(stock, 0) 
+            else:
+                hold.append(stock) #If not in the sell list, then hold it.
+
+        buy_list = []
+        for stock in long_list:
+            if stock not in hold:
+                buy_list.append(stock) # If not in the hold list, then buy it.
+
+        if len(buy_list)==0: 
+            Cash = context.portfolio.available_cash
+        else:
+            Cash = context.portfolio.available_cash/len(buy_list)
+            for stock in buy_list:
+                order_target_value(stock, Cash)        
+        g.days = 1
+    else:
+        g.days += 1
+</code></pre>
 
                                 </div>
                     </article>
                     <!--  -->
                     
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market/">
+                                <h3 class="post-title">
+                                    The performance of macroeconomic factors timing in Chinese stock market (IN PROGRESS)
+                                </h3>
+                            </a>
+                        </div>
+                        
                             <div id="disqus_thread"></div>
                             <div id="gitalk-container"></div>
                 </div>
@@ -159,14 +277,7 @@
         <div class="toc-title i-card-title">目录</div>
         <div class="toc-content">
             <ul class="markdownIt-TOC">
-<li><a href="#key-points">Key points</a></li>
-<li><a href="#macroeconomic-factors">Macroeconomic factors</a>
-<ul>
-<li><a href="#pmi">PMI</a></li>
-<li><a href="#shibor">SHIBOR</a></li>
-<li><a href="#yield-spread">Yield Spread</a></li>
-</ul>
-</li>
+<li><a href="#moving-average-convergence-divergence">Moving Average Convergence Divergence</a></li>
 </ul>
 
         </div>
