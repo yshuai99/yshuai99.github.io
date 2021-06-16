@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2021-06-16T00:26:15.942Z</updated>
+    <updated>2021-06-16T01:24:10.951Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -15,11 +15,8 @@
         <id>https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market/</id>
         <link href="https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market/">
         </link>
-        <updated>2021-06-13T15:54:41.000Z</updated>
-        <summary type="html"><![CDATA[<p>Here is the abstract.</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>Here is the abstract.</p>
-<!-- more -->
+        <updated>2021-06-13T04:54:41.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
 <h1 id="key-points">Key points</h1>
 <ul>
 <li>I analyze the macroeconomic factors timing strategy in Chinese stock makter and find that the single macroeconomic factor is not a good index to long/short Chinese stock market index. However, the 9 macroeconomic factors together is a good indicator to the Chinese stock maket.</li>
@@ -27,6 +24,16 @@
 </ul>
 <p>The idea of this blog is inspired by the Yujie Chu, the senior manager of Baofu Internet Technology. The data and python API was provided by Joinquant platform (joinquant.com).</p>
 <h1 id="macroeconomic-factors">Macroeconomic factors</h1>
+<h2 id="pmi">PMI</h2>
+<p>The Purchasing Managers' Index (PMI) is an index of the prevailing direction of economic trends in the manufacturing and service sectors. Its purpose is to provide information about current and future business conditions to company decision makers, analysts, and investors. The PMI is based on a monthly survey sent to senior executives and it is complied and released monthly.</p>
+<p>The headline PMI is a number from 0 to 100. A PMI above 50 represents an expansion when compared with the previous month. A PMI reading under 50 represents a contraction, and a reading at 50 indicates no change. The further away from 50 indicating the greater the level of change.</p>
+<blockquote>
+<p>Investors can also use the PMI to their advantage because it is a leading indicator of economic conditions. The direction of the trend in the PMI tends to precede changes in the trend in major estimates of economic activity and output, such as the GDP, Industrial Production, and Employment. Paying attention to the value and movements in the PMI can yield profitable foresight into developing trends in the overall economy.  (investopedia.com)</p>
+</blockquote>
+<h2 id="shibor">SHIBOR</h2>
+<p>The Shanghai Interbank Offered Rate is a  wholesale interest rate calculated by arithmetically averaging all the interbank RMB lending rates offered by the price quotation group of banks with a high credit rating. In this article, the SHIBOR with 1-month maturity is used, as it is reflect the pricing of middle and short term interest rate pricing and it has lower noise than the overnight interbank RMB lending rates.</p>
+<h2 id="yield-spread">Yield Spread</h2>
+<p>Yield spread is the difference between the quoted rate of return on different debt instruments.</p>
 ]]></content>
     </entry>
 </feed>
