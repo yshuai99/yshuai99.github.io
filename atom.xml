@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2021-06-16T23:38:21.297Z</updated>
+    <updated>2021-06-16T23:38:47.315Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -11,22 +11,23 @@
     <icon>https://yshuai99.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, yshuai</rights>
     <entry>
-        <title type="html"><![CDATA[Golden Cross strategy (In Progress)]]></title>
-        <id>https://yshuai99.github.io/post/golden-cross-strategy-in-progress/</id>
-        <link href="https://yshuai99.github.io/post/golden-cross-strategy-in-progress/">
+        <title type="html"><![CDATA[Three Golden Cross strategies (In Progress)]]></title>
+        <id>https://yshuai99.github.io/post/three-golden-cross-strategies-in-progress/</id>
+        <link href="https://yshuai99.github.io/post/three-golden-cross-strategies-in-progress/">
         </link>
         <updated>2021-06-16T12:23:13.000Z</updated>
-        <summary type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
+        <summary type="html"><![CDATA[<p>Here is three kinds of golden cross strategies.</p>
 ]]></summary>
-        <content type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
+        <content type="html"><![CDATA[<p>Here is three kinds of golden cross strategies.</p>
 <!-- more -->
 <p>The strategy is based on python 3.6 and jqdata module (joinquant.com)</p>
-<h1 id="core-ideas">Core ideas</h1>
+<h1 id="golden-cross-1">Golden Cross 1</h1>
+<h2 id="core-ideas">Core ideas</h2>
 <ul>
 <li>If the stock has a upwarding trend, buy it. If the stock has a downwarding trend, then sell it.</li>
 <li>If close price is larger than the average close price of past five days, buy it. If close price is smaller than the average close price of past five days, then sell it.</li>
 </ul>
-<h1 id="code">Code</h1>
+<h2 id="code">Code</h2>
 <pre><code class="language-python">import jqdata
 
 def initialize(context):
@@ -60,23 +61,22 @@ def market_open(context):
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Three Golden Cross strategies (In Progress)]]></title>
-        <id>https://yshuai99.github.io/post/three-golden-cross-strategies-in-progress/</id>
-        <link href="https://yshuai99.github.io/post/three-golden-cross-strategies-in-progress/">
+        <title type="html"><![CDATA[Golden Cross strategy]]></title>
+        <id>https://yshuai99.github.io/post/golden-cross-strategy-in-progress/</id>
+        <link href="https://yshuai99.github.io/post/golden-cross-strategy-in-progress/">
         </link>
-        <updated>2021-06-16T12:23:13.000Z</updated>
-        <summary type="html"><![CDATA[<p>Here is three kinds of golden cross strategies.</p>
+        <updated>2021-06-16T01:23:13.000Z</updated>
+        <summary type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
 ]]></summary>
-        <content type="html"><![CDATA[<p>Here is three kinds of golden cross strategies.</p>
+        <content type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
 <!-- more -->
 <p>The strategy is based on python 3.6 and jqdata module (joinquant.com)</p>
-<h1 id="golden-cross-1">Golden Cross 1</h1>
-<h2 id="core-ideas">Core ideas</h2>
+<h1 id="core-ideas">Core ideas</h1>
 <ul>
 <li>If the stock has a upwarding trend, buy it. If the stock has a downwarding trend, then sell it.</li>
 <li>If close price is larger than the average close price of past five days, buy it. If close price is smaller than the average close price of past five days, then sell it.</li>
 </ul>
-<h2 id="code">Code</h2>
+<h1 id="code">Code</h1>
 <pre><code class="language-python">import jqdata
 
 def initialize(context):
