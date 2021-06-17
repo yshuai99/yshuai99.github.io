@@ -7,7 +7,7 @@
 <title>
     Golden Cross Strategy  | yshuai
 </title>
-<link rel="shortcut icon" href="https://yshuai99.github.io/favicon.ico?v=1623890723159">
+<link rel="shortcut icon" href="https://yshuai99.github.io/favicon.ico?v=1623890913461">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
 <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
@@ -35,7 +35,7 @@
     <div class="nav">
         <div class="logo">
             <a href="https://yshuai99.github.io">
-                <img class="avatar" src="https://yshuai99.github.io/images/avatar.png?v=1623890723159" alt="">
+                <img class="avatar" src="https://yshuai99.github.io/images/avatar.png?v=1623890913461" alt="">
             </a>
             <div class="site-title">
                 <h1>
@@ -112,7 +112,7 @@
                             <time class="post-time">2021-06-15</time>
                             
                                 <a href="https://yshuai99.github.io/tag/AH91WmPtY/" class="post-tag i-tag
-                            i-tag-error">
+                            i-tag-primary">
                             #Quantative Trading
                         </a>
                                 
@@ -158,6 +158,99 @@ def market_open(context):
         log.info('Selling %s' % (security))
     record(stock_price = current_price)
 </code></pre>
+<h1 id="alternative-methods">Alternative methods</h1>
+<p>This alternative strategy will hold the stock with higher trading volume</p>
+<pre><code class="language-python">import jqdata
+def initialize(context):
+    set_benchmark('000300.XSHG')
+    set_option('use_real_price', True)
+    log.set_level('order', 'error')
+    set_order_cost(OrderCost(close_tax=0.001, open_commission=0.0003, close_commission=0.0003, min_commission=5), type='stock')
+    run_daily(market_open, time='every_bar', reference_security='000300.XSHG')
+
+def paused_filter(security_list):
+    current_data = get_current_data()
+    security_list = [stock for stock in security_list if not current_data[stock].paused]
+    return security_list
+
+
+def delisted_filter(security_list):
+    current_data = get_current_data()
+    security_list = [stock for stock in security_list if not '退' in current_data[stock].name]
+    return security_list
+
+def st_filter(security_list):
+    current_data = get_current_data()
+    security_list = [stock for stock in security_list if not current_data[stock].is_st]
+    return security_list
+
+
+'''
+# Or use one function to filter
+def filter(security_list):  
+    current_data = get_current_data()  
+    return[stock for stock in stock_list  
+        if not current_data[stock].paused   
+        and not '退' in current_data[stock].name   
+        and not current_data[stock].is_st]
+'''
+
+
+
+def market_open(context):
+    df = get_fundamentals(query(
+        valuation.code, valuation.pe_ratio, valuation.market_cap,valuation.pb_ratio,indicator.eps, indicator.inc_return, indicator.inc_net_profit_annual
+    ).filter(
+        valuation.pe_ratio&gt;0,
+        valuation.pe_ratio&lt;30,
+        valuation.pb_ratio&lt;3,
+        indicator.inc_net_profit_annual &gt; 0.30
+    ).order_by(
+        indicator.gross_profit_margin.desc()
+    ).limit(
+        150), date=None)
+    stockset = list(df['code'])
+    stockset = paused_filter(stockset)
+    stockset = delisted_filter(stockset)
+    stockset = st_filter(stockset)  
+
+    buylist = []
+    for stock in stockset:
+        close_data = attribute_history(stock, 11, '1d', ['close'])
+        volume = attribute_history(stock, 21, '1d', ['volume'])
+
+        max20_vol = max(volume['volume'][:20])
+        min_vol = min(volume['volume'][11:20])
+
+        max10 = close_data['close'][:10].mean()
+        min5 = min(close_data['close'][5:10])
+
+        cur_vol = volume['volume'][-1]
+        cur_price = close_data['close'][-1]
+
+
+        sell_list = list(context.portfolio.positions.keys())
+        if (cur_vol &lt; min_vol) or (cur_price &lt; min5):
+            stock_sell = stock
+            order_target_value(stock_sell, 0) 
+        elif (cur_vol &gt;= max20_vol) and (cur_price &gt;= max10) and (stock not in sell_list):
+            buylist.append(stock)
+    if len(buylist)==0: 
+        Cash = context.portfolio.available_cash
+    else:
+        Cash = context.portfolio.available_cash/len(buylist)
+    for stock in buylist:
+        order_target_value(stock, Cash)
+
+def security_stoploss(context,loss=0.1):
+    if len(context.portfolio.positions)&gt;0:
+        for stock in context.portfolio.positions.keys():
+            avg_cost = context.portfolio.positions[stock].avg_cost
+            current_price = context.portfolio.positions[stock].price
+            if 1 - current_price/avg_cost &gt;= loss:
+                log.info(str(stock) + '  Sell it！')
+                order_target_value(stock, 0)
+</code></pre>
 
                                 </div>
                     </article>
@@ -165,9 +258,9 @@ def market_open(context):
                     
                         <div class="next-post">
                             <div class="next">下一篇</div>
-                            <a href="https://yshuai99.github.io/post/basic/">
+                            <a href="https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market/">
                                 <h3 class="post-title">
-                                    Basic MACD Strategy (IN PROGRESS)
+                                    The performance of macroeconomic factors timing in Chinese stock market (IN PROGRESS)
                                 </h3>
                             </a>
                         </div>
@@ -188,6 +281,7 @@ def market_open(context):
             <ul class="markdownIt-TOC">
 <li><a href="#core-ideas">Core ideas</a></li>
 <li><a href="#code">Code</a></li>
+<li><a href="#alternative-methods">Alternative methods</a></li>
 </ul>
 
         </div>

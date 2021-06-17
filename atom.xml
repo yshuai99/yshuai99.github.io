@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2021-06-17T00:45:25.135Z</updated>
+    <updated>2021-06-17T00:48:35.273Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -121,55 +121,6 @@ def handle_data(context, data):
         elif today.month == 5 and today.day &gt; 15 and context.portfolio.positions[security].closeable_amount &gt; 0:
             order_target(security, 0)
             log.info(&quot;Selling %s&quot; % (security))
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Golden Cross Strategy ]]></title>
-        <id>https://yshuai99.github.io/post/golden-cross-strategy/</id>
-        <link href="https://yshuai99.github.io/post/golden-cross-strategy/">
-        </link>
-        <updated>2021-06-15T14:23:13.000Z</updated>
-        <summary type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
-<!-- more -->
-<p>The strategy is based on python 3.6 and jqdata module (joinquant.com)</p>
-<h1 id="core-ideas">Core ideas</h1>
-<ul>
-<li>If the stock has a upwarding trend, buy it. If the stock has a downwarding trend, then sell it.</li>
-<li>If close price is larger than the average close price of past five days, buy it. If close price is smaller than the average close price of past five days, then sell it.</li>
-</ul>
-<h1 id="code">Code</h1>
-<pre><code class="language-python">import jqdata
-
-def initialize(context):
-    # Set Pingan Bank as trading stock
-    g.security = '000001.XSHE'
-    # Set benchmark index as HS300
-    set_benchmark('000300.XSHG')
-    # Adjust with real price
-    set_option('use_real_price',True)
-    # Trade daily
-    run_daily(market_open,time = 'every_bar')
-    
-def market_open(context):
-    security = g.security
-    close_data = attribute_history(security,5,'1d',['close'])
-    MA5 = close_data['close'].mean()
-    current_price = close_data['close'][-1]
-    cash = context.portfolio.available_cash
-    
-    # If the price is larger than average price, buy it.
-    if current_price &gt; 1.01*MA5:
-        order_value(security,cash)
-        log.info('Buying %s' % (security))
-    # If  the price is smaller than average price, sell it.
-    elif current_price &lt; MA5 and 
-    context.portfolio.positions[security].closeable_amount &gt; 0:
-        order_target(security,0)
-        log.info('Selling %s' % (security))
-    record(stock_price = current_price)
 </code></pre>
 ]]></content>
     </entry>
@@ -310,6 +261,148 @@ def trade(context):
         g.days = 1
     else:
         g.days += 1
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Golden Cross Strategy ]]></title>
+        <id>https://yshuai99.github.io/post/golden-cross-strategy/</id>
+        <link href="https://yshuai99.github.io/post/golden-cross-strategy/">
+        </link>
+        <updated>2021-06-15T03:23:13.000Z</updated>
+        <summary type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
+<!-- more -->
+<p>The strategy is based on python 3.6 and jqdata module (joinquant.com)</p>
+<h1 id="core-ideas">Core ideas</h1>
+<ul>
+<li>If the stock has a upwarding trend, buy it. If the stock has a downwarding trend, then sell it.</li>
+<li>If close price is larger than the average close price of past five days, buy it. If close price is smaller than the average close price of past five days, then sell it.</li>
+</ul>
+<h1 id="code">Code</h1>
+<pre><code class="language-python">import jqdata
+
+def initialize(context):
+    # Set Pingan Bank as trading stock
+    g.security = '000001.XSHE'
+    # Set benchmark index as HS300
+    set_benchmark('000300.XSHG')
+    # Adjust with real price
+    set_option('use_real_price',True)
+    # Trade daily
+    run_daily(market_open,time = 'every_bar')
+    
+def market_open(context):
+    security = g.security
+    close_data = attribute_history(security,5,'1d',['close'])
+    MA5 = close_data['close'].mean()
+    current_price = close_data['close'][-1]
+    cash = context.portfolio.available_cash
+    
+    # If the price is larger than average price, buy it.
+    if current_price &gt; 1.01*MA5:
+        order_value(security,cash)
+        log.info('Buying %s' % (security))
+    # If  the price is smaller than average price, sell it.
+    elif current_price &lt; MA5 and 
+    context.portfolio.positions[security].closeable_amount &gt; 0:
+        order_target(security,0)
+        log.info('Selling %s' % (security))
+    record(stock_price = current_price)
+</code></pre>
+<h1 id="alternative-methods">Alternative methods</h1>
+<p>This alternative strategy will hold the stock with higher trading volume</p>
+<pre><code class="language-python">import jqdata
+def initialize(context):
+    set_benchmark('000300.XSHG')
+    set_option('use_real_price', True)
+    log.set_level('order', 'error')
+    set_order_cost(OrderCost(close_tax=0.001, open_commission=0.0003, close_commission=0.0003, min_commission=5), type='stock')
+    run_daily(market_open, time='every_bar', reference_security='000300.XSHG')
+
+def paused_filter(security_list):
+    current_data = get_current_data()
+    security_list = [stock for stock in security_list if not current_data[stock].paused]
+    return security_list
+
+
+def delisted_filter(security_list):
+    current_data = get_current_data()
+    security_list = [stock for stock in security_list if not '退' in current_data[stock].name]
+    return security_list
+
+def st_filter(security_list):
+    current_data = get_current_data()
+    security_list = [stock for stock in security_list if not current_data[stock].is_st]
+    return security_list
+
+
+'''
+# Or use one function to filter
+def filter(security_list):  
+    current_data = get_current_data()  
+    return[stock for stock in stock_list  
+        if not current_data[stock].paused   
+        and not '退' in current_data[stock].name   
+        and not current_data[stock].is_st]
+'''
+
+
+
+def market_open(context):
+    df = get_fundamentals(query(
+        valuation.code, valuation.pe_ratio, valuation.market_cap,valuation.pb_ratio,indicator.eps, indicator.inc_return, indicator.inc_net_profit_annual
+    ).filter(
+        valuation.pe_ratio&gt;0,
+        valuation.pe_ratio&lt;30,
+        valuation.pb_ratio&lt;3,
+        indicator.inc_net_profit_annual &gt; 0.30
+    ).order_by(
+        indicator.gross_profit_margin.desc()
+    ).limit(
+        150), date=None)
+    stockset = list(df['code'])
+    stockset = paused_filter(stockset)
+    stockset = delisted_filter(stockset)
+    stockset = st_filter(stockset)  
+
+    buylist = []
+    for stock in stockset:
+        close_data = attribute_history(stock, 11, '1d', ['close'])
+        volume = attribute_history(stock, 21, '1d', ['volume'])
+
+        max20_vol = max(volume['volume'][:20])
+        min_vol = min(volume['volume'][11:20])
+
+        max10 = close_data['close'][:10].mean()
+        min5 = min(close_data['close'][5:10])
+
+        cur_vol = volume['volume'][-1]
+        cur_price = close_data['close'][-1]
+
+
+        sell_list = list(context.portfolio.positions.keys())
+        if (cur_vol &lt; min_vol) or (cur_price &lt; min5):
+            stock_sell = stock
+            order_target_value(stock_sell, 0) 
+        elif (cur_vol &gt;= max20_vol) and (cur_price &gt;= max10) and (stock not in sell_list):
+            buylist.append(stock)
+    if len(buylist)==0: 
+        Cash = context.portfolio.available_cash
+    else:
+        Cash = context.portfolio.available_cash/len(buylist)
+    for stock in buylist:
+        order_target_value(stock, Cash)
+
+def security_stoploss(context,loss=0.1):
+    if len(context.portfolio.positions)&gt;0:
+        for stock in context.portfolio.positions.keys():
+            avg_cost = context.portfolio.positions[stock].avg_cost
+            current_price = context.portfolio.positions[stock].price
+            if 1 - current_price/avg_cost &gt;= loss:
+                log.info(str(stock) + '  Sell it！')
+                order_target_value(stock, 0)
 </code></pre>
 ]]></content>
     </entry>
