@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2021-06-16T23:39:04.828Z</updated>
+    <updated>2021-06-17T00:37:24.922Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -10,6 +10,44 @@
     <logo>https://yshuai99.github.io/images/avatar.png</logo>
     <icon>https://yshuai99.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, yshuai</rights>
+    <entry>
+        <title type="html"><![CDATA[Hollween effect strategy]]></title>
+        <id>https://yshuai99.github.io/post/hollween-effect-strategy/</id>
+        <link href="https://yshuai99.github.io/post/hollween-effect-strategy/">
+        </link>
+        <updated>2021-06-16T02:30:50.000Z</updated>
+        <summary type="html"><![CDATA[<p>The holloween effect strategy is based on python 3.6 and jq module.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>The holloween effect strategy is based on python 3.6 and jq module.</p>
+<!-- more -->
+<p>The strategy is developed based on jq module (joinquant.com)</p>
+<blockquote></blockquote>
+<p>The Halloween effect is a market-timing strategy based on the hypothesis that stocks perform better between Oct. 31 (Halloween) and May 1 than they do between the beginning of May through the end of October. (Investopedia.com)</p>
+<h2 id="code">code</h2>
+<pre><code class="language-python">def initialize(context):
+    set_option('use_real_price', True)
+
+    # Set up the trading stocks
+    g.stocks = ['000001.XSHE','600000.XSHG','600019.XSHG','600028.XSHG','600030.XSHG','600036.XSHG','600519.XSHG','601398.XSHG','601857.XSHG','601988.XSHG']
+
+
+def handle_data(context, data):
+    cash = context.portfolio.available_cash / len(g.stocks)
+    hist = history(1,'1d','close',g.stocks)
+    for security in g.stocks:
+        today = context.current_dt
+        current_price = hist[security][0]
+        # If the current time is larger than October 15th, buy it.
+        if today.month == 10 and today.day &gt; 15 and cash &gt; current_price and context.portfolio.positions[security].closeable_amount == 0:
+            order_value(security, cash)
+            log.info(&quot;Buying %s&quot; % (security))
+        # If the current time is larger than May 5th, then sell it
+        elif today.month == 5 and today.day &gt; 15 and context.portfolio.positions[security].closeable_amount &gt; 0:
+            order_target(security, 0)
+            log.info(&quot;Selling %s&quot; % (security))
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Golden Cross strategy ]]></title>
         <id>https://yshuai99.github.io/post/golden-cross-strategy/</id>

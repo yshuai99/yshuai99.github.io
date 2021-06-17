@@ -5,7 +5,7 @@
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>
-    Golden Cross strategy  | yshuai
+    Hollween effect strategy | yshuai
 </title>
 <link rel="shortcut icon" href="https://yshuai99.github.io/favicon.ico?v=1623890241579">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
@@ -106,57 +106,46 @@
                 <div id="content" class="main-container-left">
                     <article class="post i-card">
                         <h2 class="post-title">
-                            Golden Cross strategy 
+                            Hollween effect strategy
                         </h2>
                         <div class="post-info">
                             <time class="post-time">2021-06-15</time>
                             
                                 <a href="https://yshuai99.github.io/tag/AH91WmPtY/" class="post-tag i-tag
-                            i-tag-">
+                            i-tag-banana">
                             #Quantative Trading
                         </a>
                                 
                         </div>
                         
                                 <div class="post-content">
-                                    <p>Here is the simple golden cross strategy.</p>
+                                    <p>The holloween effect strategy is based on python 3.6 and jq module.</p>
 <!-- more -->
-<p>The strategy is based on python 3.6 and jqdata module (joinquant.com)</p>
-<h1 id="core-ideas">Core ideas</h1>
-<ul>
-<li>If the stock has a upwarding trend, buy it. If the stock has a downwarding trend, then sell it.</li>
-<li>If close price is larger than the average close price of past five days, buy it. If close price is smaller than the average close price of past five days, then sell it.</li>
-</ul>
-<h1 id="code">Code</h1>
-<pre><code class="language-python">import jqdata
+<p>The strategy is developed based on jq module (joinquant.com)</p>
+<blockquote></blockquote>
+<p>The Halloween effect is a market-timing strategy based on the hypothesis that stocks perform better between Oct. 31 (Halloween) and May 1 than they do between the beginning of May through the end of October. (Investopedia.com)</p>
+<h2 id="code">code</h2>
+<pre><code class="language-python">def initialize(context):
+    set_option('use_real_price', True)
 
-def initialize(context):
-    # Set Pingan Bank as trading stock
-    g.security = '000001.XSHE'
-    # Set benchmark index as HS300
-    set_benchmark('000300.XSHG')
-    # Adjust with real price
-    set_option('use_real_price',True)
-    # Trade daily
-    run_daily(market_open,time = 'every_bar')
-    
-def market_open(context):
-    security = g.security
-    close_data = attribute_history(security,5,'1d',['close'])
-    MA5 = close_data['close'].mean()
-    current_price = close_data['close'][-1]
-    cash = context.portfolio.available_cash
-    
-    # If the price is larger than average price, buy it.
-    if current_price &gt; 1.01*MA5:
-        order_value(security,cash)
-        log.info('Buying %s' % (security))
-    # If  the price is smaller than average price, sell it.
-    elif current_price &lt; MA5 and 
-    context.portfolio.positions[security].closeable_amount &gt; 0:
-        order_target(security,0)
-        log.info('Selling %s' % (security))
-    record(stock_price = current_price)
+    # Set up the trading stocks
+    g.stocks = ['000001.XSHE','600000.XSHG','600019.XSHG','600028.XSHG','600030.XSHG','600036.XSHG','600519.XSHG','601398.XSHG','601857.XSHG','601988.XSHG']
+
+
+def handle_data(context, data):
+    cash = context.portfolio.available_cash / len(g.stocks)
+    hist = history(1,'1d','close',g.stocks)
+    for security in g.stocks:
+        today = context.current_dt
+        current_price = hist[security][0]
+        # If the current time is larger than October 15th, buy it.
+        if today.month == 10 and today.day &gt; 15 and cash &gt; current_price and context.portfolio.positions[security].closeable_amount == 0:
+            order_value(security, cash)
+            log.info(&quot;Buying %s&quot; % (security))
+        # If the current time is larger than May 5th, then sell it
+        elif today.month == 5 and today.day &gt; 15 and context.portfolio.positions[security].closeable_amount &gt; 0:
+            order_target(security, 0)
+            log.info(&quot;Selling %s&quot; % (security))
 </code></pre>
 
                                 </div>
@@ -165,9 +154,9 @@ def market_open(context):
                     
                         <div class="next-post">
                             <div class="next">下一篇</div>
-                            <a href="https://yshuai99.github.io/post/basic/">
+                            <a href="https://yshuai99.github.io/post/golden-cross-strategy/">
                                 <h3 class="post-title">
-                                    Basic MACD Strategy (IN PROGRESS)
+                                    Golden Cross strategy 
                                 </h3>
                             </a>
                         </div>
@@ -186,8 +175,11 @@ def market_open(context):
         <div class="toc-title i-card-title">目录</div>
         <div class="toc-content">
             <ul class="markdownIt-TOC">
-<li><a href="#core-ideas">Core ideas</a></li>
-<li><a href="#code">Code</a></li>
+<li>
+<ul>
+<li><a href="#code">code</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
