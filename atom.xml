@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2021-06-17T00:37:24.922Z</updated>
+    <updated>2021-06-17T00:45:25.135Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -11,11 +11,87 @@
     <icon>https://yshuai99.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, yshuai</rights>
     <entry>
-        <title type="html"><![CDATA[Hollween effect strategy]]></title>
+        <title type="html"><![CDATA[Movie Industry Stocks Timing ]]></title>
+        <id>https://yshuai99.github.io/post/movie-industry-stocks-timing/</id>
+        <link href="https://yshuai99.github.io/post/movie-industry-stocks-timing/">
+        </link>
+        <updated>2021-06-16T02:37:57.000Z</updated>
+        <summary type="html"><![CDATA[<p>This strategy is based on python 3.6 and jq module.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>This strategy is based on python 3.6 and jq module.</p>
+<!-- more -->
+<p>This strategy is developed based on jq module (joinquant.com)</p>
+<p>In China, there are a lot of holidays between December and June, I will hold suitable stocks from movie industries during this time.</p>
+<h2 id="code">code</h2>
+<pre><code class="language-python">import jqdata
+
+
+def initialize(context):
+    set_option('use_real_price', True)
+    set_benchmark('000300.XSHG')
+    # R86 indicate the movie industry
+    stocks = get_industry_stocks('R86')
+    
+    # Filter for suitable stocks
+    fundamental_df = get_fundamentals(
+        query(
+            indicator.roe,
+            indicator.gross_profit_margin,
+            valuation.pb_ratio, valuation.code,cash_flow.subtotal_operate_cash_inflow           
+        )
+        .filter(
+            valuation.code.in_ (stocks)
+        )
+        .filter(
+            indicator.roe&gt;0
+        )
+        .filter(
+            indicator.gross_profit_margin&gt;0.3
+        )
+        .filter(
+            valuation.pb_ratio&lt;3
+        )
+        .filter(
+            cash_flow.subtotal_operate_cash_inflow&gt;0
+        )
+        .order_by(
+            valuation.pb_ratio.asc()
+        )
+        .limit(10)
+        
+    )
+    g.stocks = fundamental_df['code']
+    
+
+def handle_data(context, data):
+    if len(g.stocks)==0: 
+        cash = context.portfolio.available_cash
+    else:
+        cash = context.portfolio.available_cash/len(g.stocks)
+    
+    hist = history(1,'1d','close',g.stocks)
+ 
+    for security in g.stocks:
+        today = context.current_dt
+        current_price = hist[security][0]
+        # Hold the stock during December to June
+        if today.month == 12 and today.day &gt; 1 and cash &gt; current_price and context.portfolio.positions[security].closeable_amount == 0:
+            order_value(security, cash)
+            log.info(&quot;Buying %s&quot; % (security))
+            
+        elif today.month == 6 and today.day &gt; 12 and context.portfolio.positions[security].closeable_amount &gt; 0:
+            order_target(security, 0)
+
+            log.info(&quot;Selling %s&quot; % (security))
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Hollween Effect Strategy]]></title>
         <id>https://yshuai99.github.io/post/hollween-effect-strategy/</id>
         <link href="https://yshuai99.github.io/post/hollween-effect-strategy/">
         </link>
-        <updated>2021-06-16T02:30:50.000Z</updated>
+        <updated>2021-06-15T15:30:50.000Z</updated>
         <summary type="html"><![CDATA[<p>The holloween effect strategy is based on python 3.6 and jq module.</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>The holloween effect strategy is based on python 3.6 and jq module.</p>
@@ -49,11 +125,11 @@ def handle_data(context, data):
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Golden Cross strategy ]]></title>
+        <title type="html"><![CDATA[Golden Cross Strategy ]]></title>
         <id>https://yshuai99.github.io/post/golden-cross-strategy/</id>
         <link href="https://yshuai99.github.io/post/golden-cross-strategy/">
         </link>
-        <updated>2021-06-16T01:23:13.000Z</updated>
+        <updated>2021-06-15T14:23:13.000Z</updated>
         <summary type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
