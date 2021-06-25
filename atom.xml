@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2021-06-25T12:04:50.887Z</updated>
+    <updated>2021-06-25T13:16:42.251Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -10,6 +10,30 @@
     <logo>https://yshuai99.github.io/images/avatar.png</logo>
     <icon>https://yshuai99.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, yshuai</rights>
+    <entry>
+        <title type="html"><![CDATA[Triangular Arbitrage (In Progress)]]></title>
+        <id>https://yshuai99.github.io/post/triangular-arbitrage-in-progress/</id>
+        <link href="https://yshuai99.github.io/post/triangular-arbitrage-in-progress/">
+        </link>
+        <updated>2021-06-25T02:14:53.000Z</updated>
+        <summary type="html"><![CDATA[<p>Here is the R code and example for foreign, exchange rate and triangular arbitrage.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Here is the R code and example for foreign, exchange rate and triangular arbitrage.</p>
+<!-- more -->
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Triangular Arbitrage]]></title>
+        <id>https://yshuai99.github.io/post/triangular-arbitrage/</id>
+        <link href="https://yshuai99.github.io/post/triangular-arbitrage/">
+        </link>
+        <updated>2021-06-25T02:14:53.000Z</updated>
+        <summary type="html"><![CDATA[<p>Here is the R code and example for foreign, exchange rate and triangular arbitrage.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Here is the R code and example for foreign, exchange rate and triangular arbitrage.</p>
+<!-- more -->
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Effectiveness of Some Fundamental Factors in China Stock Market(In Progress)]]></title>
         <id>https://yshuai99.github.io/post/fundamental-factors/</id>
@@ -27,7 +51,7 @@
         <id>https://yshuai99.github.io/post/introduction/</id>
         <link href="https://yshuai99.github.io/post/introduction/">
         </link>
-        <updated>2021-06-22T08:38:45.000Z</updated>
+        <updated>2021-06-21T21:38:45.000Z</updated>
         <summary type="html"><![CDATA[<p>Hi, I am Yuxin Shuai. I am working on quantitative trading and business data analysis.</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>Hi, I am Yuxin Shuai. I am working on quantitative trading and business data analysis.</p>
