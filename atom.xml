@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2021-06-25T13:16:42.251Z</updated>
+    <updated>2021-06-25T13:18:17.064Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -10,6 +10,18 @@
     <logo>https://yshuai99.github.io/images/avatar.png</logo>
     <icon>https://yshuai99.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, yshuai</rights>
+    <entry>
+        <title type="html"><![CDATA[Pairs Trading (In progress)]]></title>
+        <id>https://yshuai99.github.io/post/pairs-trading-in-progress/</id>
+        <link href="https://yshuai99.github.io/post/pairs-trading-in-progress/">
+        </link>
+        <updated>2021-06-25T02:16:54.000Z</updated>
+        <summary type="html"><![CDATA[<p>Here is the R code and example for the pairs trading.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Here is the R code and example for the pairs trading.</p>
+<!-- more -->
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Triangular Arbitrage (In Progress)]]></title>
         <id>https://yshuai99.github.io/post/triangular-arbitrage-in-progress/</id>
