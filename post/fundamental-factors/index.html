@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>python | yshuai</title>
+<title>Effectiveness of Some Fundamental Factors in China Stock Market(In Progress) | yshuai</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -12,13 +12,22 @@
 <link rel="stylesheet" href="https://yshuai99.github.io/styles/main.css">
 
 
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
 
 <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
 
 
-    <meta name="description" content="Work for a better world">
+    <meta name="description" content="I analyzed the collinearity, exposure and IC of 8 fundamental factors in China stock market.
+
+" />
+    <meta name="keywords" content="" />
   </head>
   <body>
     <div id="app" class="main">
@@ -82,34 +91,36 @@
 
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
-          <h2 class="current-tag">标签: python</h2>
-          
-            <article class="post-item">
-              <div class="left">
-                <a href="https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market/">
-                  <h2 class="post-title">The performance of macroeconomic factors timing in Chinese stock market (IN PROGRESS)</h2>
-                </a>
-                <div class="post-date">
-                  2021-06-10
-                </div>
-                <div class="post-abstract">
-                  <p>This blog analysis the performance of 9 macroeconomic factors timing strategy in Chinese stock market</p>
+          <div class="post-detail">
+            <h2 class="post-title">Effectiveness of Some Fundamental Factors in China Stock Market(In Progress)</h2>
+            <div class="post-date">2021-06-24</div>
+            
+            <div class="post-content" v-pre>
+              <p>I analyzed the collinearity, exposure and IC of 8 fundamental factors in China stock market.</p>
+<!-- more -->
 
-                </div>
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://yshuai99.github.io/post/introduction/">
+                  <h3 class="post-title">
+                    Introduction
+                  </h3>
+                </a>
               </div>
-              
-                <a class="right" href="https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market/">
-                  <div class="feature-container" style="background-image: url('https://yshuai99.github.io/post-images/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market.jpg')">
-                  </div>
-                </a>
-              
-            </article>
-          
+            
 
-          <div class="pagination-container">
-  
-  
-</div>
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
 
         </div>
       </div>
@@ -135,6 +146,29 @@ var app = new Vue({
     hljs.initHighlightingOnLoad()
   </script>
 
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '3fac5e7331021c61931f',
+        clientSecret: '740cc0c2f5d8ea4e97fc7f196f45f7ff0cdb9e2f',
+        repo: 'yshuai99.github.io',
+        owner: 'yshuai99',
+        admin: ['yshuai99'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
 
 
 
