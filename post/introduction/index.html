@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>文章归档 | yshuai</title>
+<title>Introduction | yshuai</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -12,13 +12,20 @@
 <link rel="stylesheet" href="https://yshuai99.github.io/styles/main.css">
 
 
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
 
 <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
 
 
-    <meta name="description" content="Work for a better world">
+    <meta name="description" content="Hi, here is Yuxin Shuai. I am interested in quantitative trading and business data analysis. By posting the blogs, I wis..." />
+    <meta name="keywords" content="" />
   </head>
   <body>
     <div id="app" class="main">
@@ -82,80 +89,44 @@
 
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
-          
+          <div class="post-detail">
+            <h2 class="post-title">Introduction</h2>
+            <div class="post-date">2021-06-24</div>
+            
+            <div class="post-content" v-pre>
+              <p>Hi, here is Yuxin Shuai. I am interested in quantitative trading and business data analysis. By posting the blogs, I wish I can summarize what I have learnt and share them with you.</p>
+<!-- more -->
+<p>Here is the contents of this blog:</p>
+<p>Technological analysis:</p>
+<ul>
+<li><a href="https://yshuai99.github.io/post/hollween-effect-strategy/">Holloween effect strategy</a></li>
+<li><a href="https://yshuai99.github.io/post/movie-industry-stocks-timing/">Movie industry stocks timing</a></li>
+<li><a href="https://yshuai99.github.io/post/golden-cross-strategy/">Golden cross strategy</a></li>
+<li><a href="https://yshuai99.github.io/post/basic/">Basic MACD strategy</a></li>
+</ul>
 
-          <h2 class="archives-title">文章归档</h2>
-          <div class="archives-container">
+            </div>
             
-              <h2 class="year" data-aos="fade-in" data-aos-delay="500">2021</h2>
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://yshuai99.github.io/post/movie-industry-stocks-timing/">
+                  <h3 class="post-title">
+                    Movie Industry Stocks Timing 
+                  </h3>
+                </a>
+              </div>
+            
+
+            
               
-                
-                  <article class="post">
-                    <a href="https://yshuai99.github.io/post/introduction/">
-                      <h2 class="post-title">
-                        Introduction
-                      </h2>
-                    </a>
-                  </article>
-                
+                <div id="gitalk-container" data-aos="fade-in"></div>
               
-                
-                  <article class="post">
-                    <a href="https://yshuai99.github.io/post/movie-industry-stocks-timing/">
-                      <h2 class="post-title">
-                        Movie Industry Stocks Timing 
-                      </h2>
-                    </a>
-                  </article>
-                
-              
-                
-                  <article class="post">
-                    <a href="https://yshuai99.github.io/post/hollween-effect-strategy/">
-                      <h2 class="post-title">
-                        Hollween Effect Strategy
-                      </h2>
-                    </a>
-                  </article>
-                
-              
-                
-                  <article class="post">
-                    <a href="https://yshuai99.github.io/post/basic/">
-                      <h2 class="post-title">
-                        Basic MACD Strategy 
-                      </h2>
-                    </a>
-                  </article>
-                
-              
-                
-                  <article class="post">
-                    <a href="https://yshuai99.github.io/post/golden-cross-strategy/">
-                      <h2 class="post-title">
-                        Golden Cross Strategy 
-                      </h2>
-                    </a>
-                  </article>
-                
-              
-                
-                  <article class="post">
-                    <a href="https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market/">
-                      <h2 class="post-title">
-                        The performance of macroeconomic factors timing in Chinese stock market (IN PROGRESS)
-                      </h2>
-                    </a>
-                  </article>
-                
+
               
             
+
           </div>
-
-          <div class="pagination-container">
-  
-  
-</div>
 
         </div>
       </div>
@@ -181,6 +152,29 @@ var app = new Vue({
     hljs.initHighlightingOnLoad()
   </script>
 
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '3fac5e7331021c61931f',
+        clientSecret: '740cc0c2f5d8ea4e97fc7f196f45f7ff0cdb9e2f',
+        repo: 'yshuai99.github.io',
+        owner: 'yshuai99',
+        admin: ['yshuai99'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
 
 
 

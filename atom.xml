@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2021-06-17T22:50:41.344Z</updated>
+    <updated>2021-06-25T02:48:06.222Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -10,6 +10,26 @@
     <logo>https://yshuai99.github.io/images/avatar.png</logo>
     <icon>https://yshuai99.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, yshuai</rights>
+    <entry>
+        <title type="html"><![CDATA[Introduction]]></title>
+        <id>https://yshuai99.github.io/post/introduction/</id>
+        <link href="https://yshuai99.github.io/post/introduction/">
+        </link>
+        <updated>2021-06-24T15:38:45.000Z</updated>
+        <summary type="html"><![CDATA[<p>Hi, here is Yuxin Shuai. I am interested in quantitative trading and business data analysis. By posting the blogs, I wish I can summarize what I have learnt and share them with you.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Hi, here is Yuxin Shuai. I am interested in quantitative trading and business data analysis. By posting the blogs, I wish I can summarize what I have learnt and share them with you.</p>
+<!-- more -->
+<p>Here is the contents of this blog:</p>
+<p>Technological analysis:</p>
+<ul>
+<li><a href="https://yshuai99.github.io/post/hollween-effect-strategy/">Holloween effect strategy</a></li>
+<li><a href="https://yshuai99.github.io/post/movie-industry-stocks-timing/">Movie industry stocks timing</a></li>
+<li><a href="https://yshuai99.github.io/post/golden-cross-strategy/">Golden cross strategy</a></li>
+<li><a href="https://yshuai99.github.io/post/basic/">Basic MACD strategy</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Movie Industry Stocks Timing ]]></title>
         <id>https://yshuai99.github.io/post/movie-industry-stocks-timing/</id>
@@ -121,148 +141,6 @@ def handle_data(context, data):
         elif today.month == 5 and today.day &gt; 15 and context.portfolio.positions[security].closeable_amount &gt; 0:
             order_target(security, 0)
             log.info(&quot;Selling %s&quot; % (security))
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Golden Cross Strategy ]]></title>
-        <id>https://yshuai99.github.io/post/golden-cross-strategy/</id>
-        <link href="https://yshuai99.github.io/post/golden-cross-strategy/">
-        </link>
-        <updated>2021-06-15T03:23:13.000Z</updated>
-        <summary type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
-<!-- more -->
-<p>The strategy is based on python 3.6 and jqdata module (joinquant.com)</p>
-<h1 id="core-ideas">Core ideas</h1>
-<ul>
-<li>If the stock has a upwarding trend, buy it. If the stock has a downwarding trend, then sell it.</li>
-<li>If close price is larger than the average close price of past five days, buy it. If close price is smaller than the average close price of past five days, then sell it.</li>
-</ul>
-<h1 id="code">Code</h1>
-<pre><code class="language-python">import jqdata
-
-def initialize(context):
-    # Set Pingan Bank as trading stock
-    g.security = '000001.XSHE'
-    # Set benchmark index as HS300
-    set_benchmark('000300.XSHG')
-    # Adjust with real price
-    set_option('use_real_price',True)
-    # Trade daily
-    run_daily(market_open,time = 'every_bar')
-    
-def market_open(context):
-    security = g.security
-    close_data = attribute_history(security,5,'1d',['close'])
-    MA5 = close_data['close'].mean()
-    current_price = close_data['close'][-1]
-    cash = context.portfolio.available_cash
-    
-    # If the price is larger than average price, buy it.
-    if current_price &gt; 1.01*MA5:
-        order_value(security,cash)
-        log.info('Buying %s' % (security))
-    # If  the price is smaller than average price, sell it.
-    elif current_price &lt; MA5 and 
-    context.portfolio.positions[security].closeable_amount &gt; 0:
-        order_target(security,0)
-        log.info('Selling %s' % (security))
-    record(stock_price = current_price)
-</code></pre>
-<h1 id="alternative-methods">Alternative methods</h1>
-<p>This alternative strategy will hold the stock with higher trading volume</p>
-<pre><code class="language-python">import jqdata
-def initialize(context):
-    set_benchmark('000300.XSHG')
-    set_option('use_real_price', True)
-    log.set_level('order', 'error')
-    set_order_cost(OrderCost(close_tax=0.001, open_commission=0.0003, close_commission=0.0003, min_commission=5), type='stock')
-    run_daily(market_open, time='every_bar', reference_security='000300.XSHG')
-
-def paused_filter(security_list):
-    current_data = get_current_data()
-    security_list = [stock for stock in security_list if not current_data[stock].paused]
-    return security_list
-
-
-def delisted_filter(security_list):
-    current_data = get_current_data()
-    security_list = [stock for stock in security_list if not '退' in current_data[stock].name]
-    return security_list
-
-def st_filter(security_list):
-    current_data = get_current_data()
-    security_list = [stock for stock in security_list if not current_data[stock].is_st]
-    return security_list
-
-
-'''
-# Or use one function to filter
-def filter(security_list):  
-    current_data = get_current_data()  
-    return[stock for stock in stock_list  
-        if not current_data[stock].paused   
-        and not '退' in current_data[stock].name   
-        and not current_data[stock].is_st]
-'''
-
-
-
-def market_open(context):
-    df = get_fundamentals(query(
-        valuation.code, valuation.pe_ratio, valuation.market_cap,valuation.pb_ratio,indicator.eps, indicator.inc_return, indicator.inc_net_profit_annual
-    ).filter(
-        valuation.pe_ratio&gt;0,
-        valuation.pe_ratio&lt;30,
-        valuation.pb_ratio&lt;3,
-        indicator.inc_net_profit_annual &gt; 0.30
-    ).order_by(
-        indicator.gross_profit_margin.desc()
-    ).limit(
-        150), date=None)
-    stockset = list(df['code'])
-    stockset = paused_filter(stockset)
-    stockset = delisted_filter(stockset)
-    stockset = st_filter(stockset)  
-
-    buylist = []
-    for stock in stockset:
-        close_data = attribute_history(stock, 11, '1d', ['close'])
-        volume = attribute_history(stock, 21, '1d', ['volume'])
-
-        max20_vol = max(volume['volume'][:20])
-        min_vol = min(volume['volume'][11:20])
-
-        max10 = close_data['close'][:10].mean()
-        min5 = min(close_data['close'][5:10])
-
-        cur_vol = volume['volume'][-1]
-        cur_price = close_data['close'][-1]
-
-
-        sell_list = list(context.portfolio.positions.keys())
-        if (cur_vol &lt; min_vol) or (cur_price &lt; min5):
-            stock_sell = stock
-            order_target_value(stock_sell, 0) 
-        elif (cur_vol &gt;= max20_vol) and (cur_price &gt;= max10) and (stock not in sell_list):
-            buylist.append(stock)
-    if len(buylist)==0: 
-        Cash = context.portfolio.available_cash
-    else:
-        Cash = context.portfolio.available_cash/len(buylist)
-    for stock in buylist:
-        order_target_value(stock, Cash)
-
-def security_stoploss(context,loss=0.1):
-    if len(context.portfolio.positions)&gt;0:
-        for stock in context.portfolio.positions.keys():
-            avg_cost = context.portfolio.positions[stock].avg_cost
-            current_price = context.portfolio.positions[stock].price
-            if 1 - current_price/avg_cost &gt;= loss:
-                log.info(str(stock) + '  Sell it！')
-                order_target_value(stock, 0)
 </code></pre>
 ]]></content>
     </entry>
@@ -410,11 +288,153 @@ def trade(context):
 ]]></content>
     </entry>
     <entry>
+        <title type="html"><![CDATA[Golden Cross Strategy ]]></title>
+        <id>https://yshuai99.github.io/post/golden-cross-strategy/</id>
+        <link href="https://yshuai99.github.io/post/golden-cross-strategy/">
+        </link>
+        <updated>2021-06-14T16:23:13.000Z</updated>
+        <summary type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
+<!-- more -->
+<p>The strategy is based on python 3.6 and jqdata module (joinquant.com)</p>
+<h1 id="core-ideas">Core ideas</h1>
+<ul>
+<li>If the stock has a upwarding trend, buy it. If the stock has a downwarding trend, then sell it.</li>
+<li>If close price is larger than the average close price of past five days, buy it. If close price is smaller than the average close price of past five days, then sell it.</li>
+</ul>
+<h1 id="code">Code</h1>
+<pre><code class="language-python">import jqdata
+
+def initialize(context):
+    # Set Pingan Bank as trading stock
+    g.security = '000001.XSHE'
+    # Set benchmark index as HS300
+    set_benchmark('000300.XSHG')
+    # Adjust with real price
+    set_option('use_real_price',True)
+    # Trade daily
+    run_daily(market_open,time = 'every_bar')
+    
+def market_open(context):
+    security = g.security
+    close_data = attribute_history(security,5,'1d',['close'])
+    MA5 = close_data['close'].mean()
+    current_price = close_data['close'][-1]
+    cash = context.portfolio.available_cash
+    
+    # If the price is larger than average price, buy it.
+    if current_price &gt; 1.01*MA5:
+        order_value(security,cash)
+        log.info('Buying %s' % (security))
+    # If  the price is smaller than average price, sell it.
+    elif current_price &lt; MA5 and 
+    context.portfolio.positions[security].closeable_amount &gt; 0:
+        order_target(security,0)
+        log.info('Selling %s' % (security))
+    record(stock_price = current_price)
+</code></pre>
+<h1 id="alternative-methods">Alternative methods</h1>
+<p>This alternative strategy will hold the stock with higher trading volume</p>
+<pre><code class="language-python">import jqdata
+def initialize(context):
+    set_benchmark('000300.XSHG')
+    set_option('use_real_price', True)
+    log.set_level('order', 'error')
+    set_order_cost(OrderCost(close_tax=0.001, open_commission=0.0003, close_commission=0.0003, min_commission=5), type='stock')
+    run_daily(market_open, time='every_bar', reference_security='000300.XSHG')
+
+def paused_filter(security_list):
+    current_data = get_current_data()
+    security_list = [stock for stock in security_list if not current_data[stock].paused]
+    return security_list
+
+
+def delisted_filter(security_list):
+    current_data = get_current_data()
+    security_list = [stock for stock in security_list if not '退' in current_data[stock].name]
+    return security_list
+
+def st_filter(security_list):
+    current_data = get_current_data()
+    security_list = [stock for stock in security_list if not current_data[stock].is_st]
+    return security_list
+
+
+'''
+# Or use one function to filter
+def filter(security_list):  
+    current_data = get_current_data()  
+    return[stock for stock in stock_list  
+        if not current_data[stock].paused   
+        and not '退' in current_data[stock].name   
+        and not current_data[stock].is_st]
+'''
+
+
+
+def market_open(context):
+    df = get_fundamentals(query(
+        valuation.code, valuation.pe_ratio, valuation.market_cap,valuation.pb_ratio,indicator.eps, indicator.inc_return, indicator.inc_net_profit_annual
+    ).filter(
+        valuation.pe_ratio&gt;0,
+        valuation.pe_ratio&lt;30,
+        valuation.pb_ratio&lt;3,
+        indicator.inc_net_profit_annual &gt; 0.30
+    ).order_by(
+        indicator.gross_profit_margin.desc()
+    ).limit(
+        150), date=None)
+    stockset = list(df['code'])
+    stockset = paused_filter(stockset)
+    stockset = delisted_filter(stockset)
+    stockset = st_filter(stockset)  
+
+    buylist = []
+    for stock in stockset:
+        close_data = attribute_history(stock, 11, '1d', ['close'])
+        volume = attribute_history(stock, 21, '1d', ['volume'])
+
+        max20_vol = max(volume['volume'][:20])
+        min_vol = min(volume['volume'][11:20])
+
+        max10 = close_data['close'][:10].mean()
+        min5 = min(close_data['close'][5:10])
+
+        cur_vol = volume['volume'][-1]
+        cur_price = close_data['close'][-1]
+
+
+        sell_list = list(context.portfolio.positions.keys())
+        if (cur_vol &lt; min_vol) or (cur_price &lt; min5):
+            stock_sell = stock
+            order_target_value(stock_sell, 0) 
+        elif (cur_vol &gt;= max20_vol) and (cur_price &gt;= max10) and (stock not in sell_list):
+            buylist.append(stock)
+    if len(buylist)==0: 
+        Cash = context.portfolio.available_cash
+    else:
+        Cash = context.portfolio.available_cash/len(buylist)
+    for stock in buylist:
+        order_target_value(stock, Cash)
+
+def security_stoploss(context,loss=0.1):
+    if len(context.portfolio.positions)&gt;0:
+        for stock in context.portfolio.positions.keys():
+            avg_cost = context.portfolio.positions[stock].avg_cost
+            current_price = context.portfolio.positions[stock].price
+            if 1 - current_price/avg_cost &gt;= loss:
+                log.info(str(stock) + '  Sell it！')
+                order_target_value(stock, 0)
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[The performance of macroeconomic factors timing in Chinese stock market (IN PROGRESS)]]></title>
         <id>https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market/</id>
         <link href="https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market/">
         </link>
-        <updated>2021-06-11T19:54:41.000Z</updated>
+        <updated>2021-06-10T21:54:41.000Z</updated>
         <summary type="html"><![CDATA[<p>This blog analysis the performance of 9 macroeconomic factors timing strategy in Chinese stock market</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>This blog analysis the performance of 9 macroeconomic factors timing strategy in Chinese stock market</p>
@@ -435,7 +455,20 @@ def trade(context):
 <h2 id="shibor">SHIBOR</h2>
 <p>The Shanghai Interbank Offered Rate is a  wholesale interest rate calculated by arithmetically averaging all the interbank RMB lending rates offered by the price quotation group of banks with a high credit rating. In this article, the SHIBOR with 1-month maturity is used, as it is reflect the pricing of middle and short term interest rate pricing and it has lower noise than the overnight interbank RMB lending rates.</p>
 <h2 id="yield-spread">Yield Spread</h2>
-<p>Yield spread is the difference between the quoted rate of return on different debt instruments.</p>
+<p>In this report, the yield spread is the difference of yield between 10 years government bonds and 1 year. It is the result of multiple of factors, such as fed target rate, real GDP growth, inflation and institutional demand. Usually it have a upwarding slope, meaning that the market hold positive expectation towards the economy situation. However, the yield curve would have a flat or even inverted curve if the market holds pessimistic expectations.</p>
+<p>Usually the inverted yield curve is surronded with higher interest rate and tight credit policy, which is a negative signal for stock market.</p>
+<h2 id="credit">Credit</h2>
+<p>Here the economic factors is the difference of yield between 1-month AAA corporate bond and 1-month government bonds. This spread also reflects the expectation of economic. It will increase during economic contraction period as investors would rather choose higher credit bonds such as government bonds. While during expansion time, investors hold optimistic towards the market and choose the bonds with lower credit to get higher return.</p>
+<h2 id="m1-m2">M1-M2</h2>
+<p>In this blog this factor would be the difference of increase rate between M1 and M2.</p>
+<blockquote></blockquote>
+<ul>
+<li>M0: The sum of Currency in Circulation</li>
+<li>M1: The sum of Currency with the Public, Demand Deposits with the Banking System</li>
+<li>M2: The sum of Currency with the Public, Current Deposits with the Banking System, Savings Deposits with the Banking System, Certificates of Deposits issued by Banks, Term Deposits of residents with a contractual maturity up to and including one year with the Banking System<br>
+(https://www.clearias.com/monetary-aggregates/)</li>
+</ul>
+<p>Generally the increasing rate of M1 and M2 should</p>
 ]]></content>
     </entry>
 </feed>
