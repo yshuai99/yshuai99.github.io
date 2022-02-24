@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2022-02-24T14:58:10.486Z</updated>
+    <updated>2022-02-24T15:09:49.596Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -178,6 +178,161 @@ arbitrage.actions &lt;- distances(currency.graph, v=V(currency.graph), to=V(curr
 
 </code></pre>
 <figure data-type="image" tabindex="3"><img src="https://yshuai99.github.io/post-images/1645714320207.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Pairs Trading]]></title>
+        <id>https://yshuai99.github.io/post/pairs-trading-in-progress_/</id>
+        <link href="https://yshuai99.github.io/post/pairs-trading-in-progress_/">
+        </link>
+        <updated>2021-12-31T16:16:54.000Z</updated>
+        <summary type="html"><![CDATA[<p>Here is the R code and example for the pairs trading.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Here is the R code and example for the pairs trading.</p>
+<!-- more -->
+<h2 id="code">Code</h2>
+<pre><code class="language-R">library(egcm)
+library(quantmod)
+library(PerformanceAnalytics)
+
+s &lt;- yegcm(&quot;KO&quot;, &quot;PEP&quot;, start=&quot;1972-01-01&quot;, end=&quot;2000-01-01&quot;)
+
+plot(s)
+
+getSymbols(&quot;KO&quot;,from=&quot;1972-06-01&quot;, to=&quot;2000-01-01&quot;)
+getSymbols(&quot;PEP&quot;,from=&quot;1972-06-01&quot;, to=&quot;2000-01-01&quot;)
+
+train_start &lt;- &quot;1972-06-01&quot;
+train_end &lt;- &quot;1994-01-01&quot;
+
+test_start &lt;- &quot;1994-01-02&quot;
+test_end &lt;- &quot;2000-01-01&quot;
+
+train_ko &lt;- train_ko$KO.Adjusted
+
+train_ko &lt;- KO[paste0(train_start, '/', train_end)]
+train_pep &lt;- PEP[paste0(train_start, '/', train_end)]
+
+test_ko &lt;- KO[paste0(test_start, '/', test_end)]
+test_pep &lt;- PEP[paste0(test_start, '/', test_end)]
+
+train_ko &lt;- train_ko$KO.Adjusted
+train_pep &lt;- train_pep$PEP.Adjusted
+
+test_ko &lt;- test_ko$KO.Adjusted
+test_pep &lt;- test_pep$PEP.Adjusted
+
+lm &lt;- lm(train_ko~train_pep)
+summary(lm)
+
+#KO=-0.88215 + 0.574203*PEP + residuals. Standard deviation=0.3543
+#spread=KO - 0.574203*PEP
+
+beta &lt;- 0.574203
+std &lt;- 0.3543
+
+spread = train_ko-beta*train_pep
+
+upper_bound &lt;- mean(spread)-beta
+lower_bound &lt;- mean(spread)+beta
+
+buy_signals &lt;- ifelse(spread &lt;= upper_bound, 1, 0)
+sell_signals &lt;- ifelse(spread &gt;= lower_bound, 1, 0)
+
+pair_strategy &lt;- cbind(spread, buy_signals,sell_signals)
+colnames(pair_strategy) &lt;- c(&quot;spread&quot;, &quot;buy_signals&quot;,&quot;sell_signals&quot;)
+
+plot(spread)
+
+#For signals like 1,1,1,1,1,1,0, only trade at first signal.
+
+position &lt;- 0
+pair_strategy$position &lt;- position
+
+pair_strategy$return = diff(log(pair_strategy$spread))
+
+plot(train_pair_strategy$spread, main = &quot; &quot;,
+     cex.main = 0.8,
+     cex.lab = 0.8,
+     cex.axis = 0.8)
+abline(h = threshold_1, lty = 2)
+abline(h = threshold_2, lty = 2)
+
+point_type &lt;- rep(NA, nrow(train_pair_strategy))
+buy_index &lt;- which(train_pair_strategy$buy_signals == 1)
+sell_index &lt;- which(train_pair_strategy$sell_signals == 1)
+
+point_type[buy_index] &lt;- 21
+point_type[sell_index] &lt;- 24
+points(train_pair_strategy$spread, pch = point_type)
+
+for(i in 1:length(buy_signals)){
+  if(pair_strategy$buy_signals[i]==1 &amp;&amp; pair_strategy$sell_signals[i]==0 ){
+    pair_strategy$position[i] &lt;- 1
+    pair_strategy$position[i+1] &lt;- 1
+  }
+  if(pair_strategy$buy_signals[i]==0 &amp;&amp; pair_strategy$sell_signals[i]==0 &amp;&amp; pair_strategy$position[i]==1 ){
+    pair_strategy$position[i+1] &lt;- 1
+  }
+  if(pair_strategy$buy_signals[i]==0 &amp;&amp; pair_strategy$sell_signals[i]==1){
+    pair_strategy$position[i] &lt;- 0
+  }
+}
+
+
+
+train_return &lt;- na.omit(train_pair_strategy$return[which(train_pair_strategy$position == 1)])
+tail(cumsum(train_return$return),1)
+SharpeRatio(train_return$return)
+
+
+test_spread = test_ko-beta*test_pep
+test_buy_signals &lt;- ifelse(test_spread &lt;= threshold_1, 1, 0)
+test_sell_signals &lt;- ifelse(test_spread &gt;= threshold_2, 1, 0)
+
+test_pair_strategy &lt;- cbind(test_spread, test_buy_signals,test_sell_signals)
+colnames(test_pair_strategy) &lt;- c(&quot;spread&quot;, &quot;buy_signals&quot;,&quot;sell_signals&quot;)
+
+plot(test_pair_strategy$spread, main = &quot; &quot;,
+     cex.main = 0.8,
+     cex.lab = 0.8,
+     cex.axis = 0.8)
+abline(h = threshold_1, lty = 2)
+abline(h = threshold_2, lty = 2)
+
+point_type &lt;- rep(NA, nrow(test_pair_strategy))
+buy_index &lt;- which(test_pair_strategy$buy_signals == 1)
+sell_index &lt;- which(test_pair_strategy$sell_signals == 1)
+
+point_type[buy_index] &lt;- 21
+point_type[sell_index] &lt;- 24
+points(test_pair_strategy$spread, pch = point_type)
+
+
+test_pair_strategy$return = diff(log(-test_pair_strategy$spread))
+
+position &lt;- 0
+test_pair_strategy$position &lt;- position
+
+for(i in 1:(length(test_buy_signals)-1)){
+  if(test_pair_strategy$buy_signals[i]==1 &amp;&amp; test_pair_strategy$sell_signals[i]==0 ){
+    test_pair_strategy$position[i] &lt;- 1
+    test_pair_strategy$position[i+1] &lt;- 1
+  }
+  if(test_pair_strategy$buy_signals[i]==0 &amp;&amp; test_pair_strategy$sell_signals[i]==0 &amp;&amp; test_pair_strategy$position[i]==1 ){
+    test_pair_strategy$position[i+1] &lt;- 1
+  }
+  if(test_pair_strategy$buy_signals[i]==0 &amp;&amp; test_pair_strategy$sell_signals[i]==1){
+    test_pair_strategy$position[i] &lt;- 0
+  }
+}
+
+test_return &lt;- na.omit(test_pair_strategy$return[which(test_pair_strategy$position == 1)])
+
+tail(cumsum(test_return$return),1)
+SharpeRatio(test_return$return)
+
+</code></pre>
 ]]></content>
     </entry>
     <entry>
