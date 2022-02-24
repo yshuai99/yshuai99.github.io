@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2022-01-06T17:48:44.539Z</updated>
+    <updated>2022-02-24T14:52:21.702Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -47,11 +47,145 @@
 ]]></content>
     </entry>
     <entry>
+        <title type="html"><![CDATA[Triangular Arbitrage]]></title>
+        <id>https://yshuai99.github.io/post/triangular-arbitrage/</id>
+        <link href="https://yshuai99.github.io/post/triangular-arbitrage/">
+        </link>
+        <updated>2021-06-21T10:14:53.000Z</updated>
+        <summary type="html"><![CDATA[<p>Here is the R code and example for foreign, exchange rate and triangular arbitrage.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Here is the R code and example for foreign, exchange rate and triangular arbitrage.</p>
+<!-- more -->
+<h1 id="example-1">Example 1</h1>
+<figure data-type="image" tabindex="1"><img src="https://yshuai99.github.io/post-images/1645712729898.png" alt="" loading="lazy"></figure>
+<h2 id="code">code</h2>
+<pre><code class="language-R">
+f.obj &lt;- c(-1,-1,-1,-1,1.3495277,0,0,0,1.52207,0,0,0,0.942507,0,0,0,0.9891197,               0,0,0)
+
+# Create constraint matrix B
+f.con &lt;- matrix(c(-1,-1,-1,-1,1.3495277,0,0,0,1.52207,0,0,0,0.942507,0,0,0,                               0.9891197,0,0,0,
+-1,-1,-1,-1,1.3495277,0,0,0,1.52207,0,0,0,0.942507,0,0,0,0.9891197,0,0,0,
+0.741,0,0,0,-1,-1,-1,-1,0,1.1248594,0,0,0,0.6978367,0,0,0,0.7320644,0,0,
+0,0.657,0,0,0,0.889,0,0,-1,-1,-1,-1,0,0,0.6195787,0,0,0,0.6501951,0,
+0,0,1.061,0,0,0,1.433,0,0,0,1.614,0,-1,-1,-1,-1,0,0,0,1.049318,
+0,0,0,1.011,0,0,0,1.366,0,0,0,1.538,0,0,0,0.953,-1,-1,-1,-1
+), nrow=6, byrow=TRUE)
+
+# Right hand side for the constraints
+f.rhs &lt;- c(1, 10, 0, 0, 0, 0)
+
+# Direction of the constraints
+f.dir &lt;- c(&quot;&gt;=&quot;, &quot;&lt;=&quot;, &quot;=&quot;, &quot;=&quot;,&quot;=&quot;,&quot;=&quot;)
+lp(&quot;max&quot;,f.obj,f.con,f.dir,f.rhs)
+lp(&quot;max&quot;,f.obj,f.con,f.dir,f.rhs)$solution
+</code></pre>
+<p>The result is:</p>
+<figure data-type="image" tabindex="2"><img src="https://yshuai99.github.io/post-images/1645713595762.png" alt="" loading="lazy"></figure>
+<p>According to the result, the trading actions are:</p>
+<ul>
+<li>USD to EUR: 3756.446</li>
+<li>EUR to GBP: 2783.527</li>
+<li>GBP to USD: 2474.555</li>
+</ul>
+<h1 id="example-2">Example 2:</h1>
+<p>In the above example, we implicitly assumes that the currencies can be bought or sold at the same price. In real markets, there is always a gap between the price a buyer pays for a security and the amount the seller collects called the bid-ask spread. We now model this real-life situation, where we can only purchase each currency at their ask prices or sell them at their bid prices. Consider the following bid/ask rates among the fivve currencies:<br>
+<img src="https://yshuai99.github.io/post-images/1645713718773.png" alt="" loading="lazy"><br>
+<img src="https://yshuai99.github.io/post-images/1645713736262.png" alt="" loading="lazy"><br>
+Develop a new LP to detect if there is arbitrage opportunities in these bid/ask rates via the LP solver.</p>
+<h2 id="code-2">Code:</h2>
+<pre><code class="language-R">f.obj &lt;- c(-1,-1,-1,-1,1.3422819,0,0,0,1.5174507,0,0,0,0.9380863,0,0,0,                       0.9832842,0,0,0)
+
+# Create constraint matrix B
+f.con &lt;- matrix(c(-1,-1,-1,-1,1.3422819,0,0,0,1.5174507,0,0,0,0.9380863,0,0,0,                            0.9832842,0,0,0, -1,-1,-1,-1,1.3422819,0,0,0,                                 1.5174507,0,0,0,0.9380863,0,0,0,0.9832842,0,0,0,
+                            0.745,0,0,0,-1,-1,-1,-1,0,1.117318,0,0,0,0.694927,                            0,0,0,0.729927,0,0,0,0.659,0,0,0,0.8895,0,0,-1,-1,                            -1,-1,0,0,0.6176652,0,0,0,0.6493506,0,0,0,1.066,0,                            0,0,1.439,0,0,0,1.619,0,-1,-1,-1,-1,0,0,0,                                    1.043841, 0,0,0,1.017,0,0,0,1.37,0,0,0,1.54,0,0,0,                            0.958,-1,-1,-1,-1
+                            ), nrow=6, byrow=TRUE)
+
+# Right hand side for the constraints
+f.rhs &lt;- c(1, 10, 0, 0, 0, 0)
+
+# Direction of the constraints
+f.dir &lt;- c(&quot;&gt;=&quot;, &quot;&lt;=&quot;, &quot;=&quot;, &quot;=&quot;,&quot;=&quot;,&quot;=&quot;)
+
+lp(&quot;max&quot;,f.obj,f.con,f.dir,f.rhs)
+lp(&quot;max&quot;,f.obj,f.con,f.dir,f.rhs)$solution
+</code></pre>
+<p>The result is:<br>
+<img src="https://yshuai99.github.io/post-images/1645713945723.png" alt="" loading="lazy"><br>
+According to the results above, the trading actions are:</p>
+<ul>
+<li>USD to EUR: 833.9974</li>
+<li>EUR to CHF: 621.3280</li>
+<li>GBP to USD: 556.1943</li>
+<li>CHF to CAD: 894.0910</li>
+<li>CAD to GBP: 856.5392</li>
+</ul>
+<h1 id="example-3">Example 3:</h1>
+<p>The LP method is fine for small size problem. However, for large size problem special-purpose method is needed. Calculate the arbitrage by usingthe Bellman-Ford method.<br>
+<img src="https://yshuai99.github.io/post-images/1645714073218.png" alt="" loading="lazy"></p>
+<h2 id="code-3">Code</h2>
+<pre><code class="language-R">#Initialize the graph
+initial.graph &lt;- make_empty_graph(5,directed = T)
+#Create edges
+graph.edges &lt;- matrix(c(1,2,
+                                        1,3,
+                                        1,4,
+                                        1,5,
+                                        2,1,
+                                        2,3,
+                                        2,4,
+                                        2,5,
+                                        3,1,
+                                        3,2,
+                                        3,4,
+                                        3,5,
+                                        4,1,
+                                        4,2,
+                                        4,3,
+                                        4,5,
+                                        5,1,
+                                        5,2,
+                                        5,3,
+                                        5,4
+                                        ), nrow=20, byrow=TRUE)
+
+#create weights
+graph.weights &lt;- matrix(c(-log(0.9100000),
+                                           -log(0.7640000),
+                                           -log(1.0280000),
+                                           -log(1.320),
+                                           log(1.0989011),
+                                           -log(0.8440000),
+                                           -log(1.0730000),
+                                           -log(1.453),
+                                           log(1.3089005),
+                                           log(1.1848341),
+                                           -log(1.6140000),
+                                           -log(1.716),
+                                           log(0.9727626),
+                                           log(0.9319664),
+                                           log(0.6195787),
+                                           -log(1.354),
+                                           log(0.7575758),
+                                           log(0.6882312),
+                                           log(0.5827506),
+                                           log(0.7385524)
+                                           ), nrow=20, byrow=TRUE)
+
+currency.graph &lt;- add_edges(initial.graph,t(graph.edges),weight=graph.weights)
+plot(currency.graph)
+
+arbitrage.actions &lt;- distances(currency.graph, v=V(currency.graph), to=V(currency.graph), algorithm=&quot;bellman
+
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://yshuai99.github.io/post-images/1645714320207.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[Movie Industry Stocks Timing ]]></title>
         <id>https://yshuai99.github.io/post/movie-industry-stocks-timing/</id>
         <link href="https://yshuai99.github.io/post/movie-industry-stocks-timing/">
         </link>
-        <updated>2021-06-16T02:37:57.000Z</updated>
+        <updated>2021-06-15T15:37:57.000Z</updated>
         <summary type="html"><![CDATA[<p>This strategy is based on python 3.6 and jq module.</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>This strategy is based on python 3.6 and jq module.</p>
@@ -308,7 +442,7 @@ def trade(context):
         <id>https://yshuai99.github.io/post/golden-cross-strategy/</id>
         <link href="https://yshuai99.github.io/post/golden-cross-strategy/">
         </link>
-        <updated>2021-06-14T16:23:13.000Z</updated>
+        <updated>2021-06-14T05:23:13.000Z</updated>
         <summary type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>Here is the simple golden cross strategy.</p>
@@ -485,38 +619,6 @@ def security_stoploss(context,loss=0.1):
 (https://www.clearias.com/monetary-aggregates/)</li>
 </ul>
 <p>Generally the increasing rate of M1 and M2 should</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Hello Gridea]]></title>
-        <id>https://yshuai99.github.io/post/hello-gridea/</id>
-        <link href="https://yshuai99.github.io/post/hello-gridea/">
-        </link>
-        <updated>2018-12-11T16:00:00.000Z</updated>
-        <summary type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-<!-- more -->
-<p><a href="https://github.com/getgridea/gridea">Github</a><br>
-<a href="https://gridea.dev/">Gridea 主页</a><br>
-<a href="http://fehey.com/">示例网站</a></p>
-<h2 id="特性">特性👇</h2>
-<p>📝  你可以使用最酷的 <strong>Markdown</strong> 语法，进行快速创作</p>
-<p>🌉  你可以给文章配上精美的封面图和在文章任意位置插入图片</p>
-<p>🏷️  你可以对文章进行标签分组</p>
-<p>📋  你可以自定义菜单，甚至可以创建外部链接菜单</p>
-<p>💻  你可以在 <strong>Windows</strong>，<strong>MacOS</strong> 或 <strong>Linux</strong> 设备上使用此客户端</p>
-<p>🌎  你可以使用 <strong>𝖦𝗂𝗍𝗁𝗎𝖻 𝖯𝖺𝗀𝖾𝗌</strong> 或 <strong>Coding Pages</strong> 向世界展示，未来将支持更多平台</p>
-<p>💬  你可以进行简单的配置，接入 <a href="https://github.com/gitalk/gitalk">Gitalk</a> 或 <a href="https://github.com/SukkaW/DisqusJS">DisqusJS</a> 评论系统</p>
-<p>🇬🇧  你可以使用<strong>中文简体</strong>或<strong>英语</strong></p>
-<p>🌁  你可以任意使用应用内默认主题或任意第三方主题，强大的主题自定义能力</p>
-<p>🖥  你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步</p>
-<p>🌱 当然 <strong>Gridea</strong> 还很年轻，有很多不足，但请相信，它会不停向前 🏃</p>
-<p>未来，它一定会成为你离不开的伙伴</p>
-<p>尽情发挥你的才华吧！</p>
-<p>😘 Enjoy~</p>
 ]]></content>
     </entry>
 </feed>
