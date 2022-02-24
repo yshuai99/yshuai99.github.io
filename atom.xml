@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2022-02-24T15:15:47.481Z</updated>
+    <updated>2022-02-24T15:16:25.380Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -15,7 +15,7 @@
         <id>https://yshuai99.github.io/post/introduction/</id>
         <link href="https://yshuai99.github.io/post/introduction/">
         </link>
-        <updated>2022-02-23T11:38:45.000Z</updated>
+        <updated>2022-02-22T23:38:45.000Z</updated>
         <summary type="html"><![CDATA[<p>Hi, I am Yuxin Shuai. I am working on quantitative trading and business data analysis.</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>Hi, I am Yuxin Shuai. I am working on quantitative trading and business data analysis.</p>
@@ -28,7 +28,7 @@
 <li><a href="https://yshuai99.github.io/post/golden-cross-strategy/">Golden cross strategy</a></li>
 <li><a href="https://yshuai99.github.io/post/basic/">Basic MACD strategy</a></li>
 <li><a href="https://yshuai99.github.io/post/triangular-arbitrage/">Triangular Arbitrage </a></li>
-<li><a href="">Pairs Trading</a></li>
+<li><a href="https://yshuai99.github.io/post/pairs-trading-in-progress_/">Pairs Trading</a></li>
 </ul>
 <h2 id="reports">Reports</h2>
 <ul>
