@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://yshuai99.github.io/favicon.ico?v=1645752644552">
+<link rel="shortcut icon" href="https://yshuai99.github.io/favicon.ico?v=1645752835051">
 <link rel="stylesheet" href="https://yshuai99.github.io/styles/main.css">
 
 
@@ -38,7 +38,7 @@ I ana..." />
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://yshuai99.github.io">
-        <img src="https://yshuai99.github.io/images/avatar.png?v=1645752644552" class="site-logo">
+        <img src="https://yshuai99.github.io/images/avatar.png?v=1645752835051" class="site-logo">
         <h1 class="site-title">yshuai</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -269,6 +269,151 @@ df_pct[['net_value','net_value_timing']].plot(figsize=(15,6),title='PMI择时')
 
 
 #SHIBOR
+body=read_file(path+'/SHIBOR数据.xls')
+df_interest=pd.read_excel(StringIO(body))
+col = u'SHIBOR:1个月'
+df_interest=df_interest.set_index(u'日期')
+df_interest.iloc[:,1:2].plot(figsize=(15,6),title='SHIBOR')
+
+df_interest=df_interest[[col]]
+upperband,middleband,lowerband = (tl.BBANDS(df_interest[col].values, timeperiod=12, nbdevup=1.8, nbdevdn=1.8))
+# print df_1
+
+df_interest['BBAND_upper']=upperband
+df_interest['BBAND_middle']=middleband
+df_interest['BBAND_lower']=lowerband
+
+pre_position = 0
+for date in df_interest.index:
+    if df_interest.loc[date,col]&gt;df_interest.loc[date,'BBAND_middle']:
+        df_interest.loc[date,'position']=0
+    elif df_interest.loc[date,col]&lt;df_interest.loc[date,'BBAND_lower']:
+        df_interest.loc[date,'position']=1.0
+    else:
+        df_interest.loc[date,'position']=pre_position
+    pre_position=df_interest.loc[date,'position']
+df_interest['position']=df_interest['position'].shift(1)
+
+df_pct=pd.DataFrame()
+prices = get_price('000300.XSHG',start_date='2005-01-01',end_date='2018-11-30',fields='close')['close']
+df_pct['pct']=prices.pct_change()
+
+rate_riskfree = 0
+df_pct = pd.concat([df_pct,df_interest],axis=1)['2006-01-01':'2018-11-30'].dropna()
+df_pct['net_value'] =(df_pct['pct']+1).cumprod()
+df_pct['net_value_timing'] = (df_pct['pct']*df_pct['position']+rate_riskfree*(1-df_pct['position'])+1).cumprod()
+df_pct[['net_value','net_value_timing']].plot(figsize=(15,6),title='SHIBOR:1M择时')
+
+#Yield
+
+body=read_file(path+'/国债到期收益率.xls')
+df_tbonds=pd.read_excel(StringIO(body))
+df_tbonds.set_index(u'日期',inplace=True)
+df_tbonds=df_tbonds.fillna(method='ffill')
+term_spread_tbonds = df_tbonds[u'中债国债到期收益率:10年']-df_tbonds[u'中债国债到期收益率:1个月']
+term_spread_tbonds_diff = term_spread_tbonds.diff(21)
+term_spread_tbonds=pd.rolling_mean(term_spread_tbonds,1)
+term_spread_tbonds.plot(figsize=(15,6),title='10年-1年国债期限利差')
+
+df_termspread=pd.DataFrame()
+col='termspread'
+df_termspread=term_spread_tbonds.to_frame('termspread')
+upperband,middleband,lowerband = (tl.BBANDS(df_termspread[col].values, timeperiod=25, nbdevup=1.8, nbdevdn=1.8))
+
+df_termspread['BBAND_upper']=upperband
+df_termspread['BBAND_middle']=middleband
+df_termspread['BBAND_lower']=lowerband
+
+df_termspread.head()
+pre_position = 0
+for date in df_termspread.index:
+    if df_termspread.loc[date,col]&lt;df_termspread.loc[date,'BBAND_middle']:
+        df_termspread.loc[date,'position']=0
+    elif df_termspread.loc[date,col]&gt;df_termspread.loc[date,'BBAND_upper']:
+        df_termspread.loc[date,'position']=1.0
+    else:
+        df_termspread.loc[date,'position']=pre_position
+    pre_position=df_termspread.loc[date,'position']
+df_termspread['position']=df_termspread['position'].shift(1)
+df_termspread.head().append(df_termspread.tail())
+
+df_pct=pd.DataFrame()
+prices = get_price('000300.XSHG',start_date='2005-01-01',end_date='2018-11-30',fields='close')['close']
+df_pct['pct']=prices.pct_change()
+
+rate_riskfree = 0
+df_pct = pd.concat([df_pct,df_termspread],axis=1)['2007-01-01':'2018-11-30'].dropna()
+df_pct['net_value'] =(df_pct['pct']+1).cumprod()
+df_pct['net_value_timing'] = (df_pct['pct']*df_pct['position']+rate_riskfree*(1-df_pct['position'])+1).cumprod()
+df_pct[['net_value','net_value_timing']].plot(figsize=(15,6),title='国债期限利差择时')
+
+# Credit
+
+body=read_file(path+'/企业债到期收益率(AAA).xls')
+df_cbonds=pd.read_excel(StringIO(body))
+df_cbonds.set_index(u'日期',inplace=True)
+df_cbonds=df_cbonds.fillna(method='ffill')
+credit_spread=df_cbonds[u'中债企业债到期收益率(AAA):1个月']-df_tbonds[u'中债国债到期收益率:1个月']
+credit_spread=pd.rolling_mean(credit_spread,1)
+credit_spread['2006-01-01':].plot(figsize=(15,6),title='AAA企业债信用利差:1个月')
+
+df_creditspread=pd.DataFrame()
+col='creditspread'
+df_creditspread=credit_spread.to_frame('creditspread')
+upperband,middleband,lowerband = (tl.BBANDS(df_creditspread[col].values, timeperiod=25, nbdevup=1.8, nbdevdn=1.8))
+
+df_creditspread['BBAND_upper']=upperband
+df_creditspread['BBAND_middle']=middleband
+df_creditspread['BBAND_lower']=lowerband
+pre_position = 0
+for date in df_creditspread.index:
+    if df_creditspread.loc[date,col]&gt;df_creditspread.loc[date,'BBAND_middle']:
+        df_creditspread.loc[date,'position']=0
+    elif df_creditspread.loc[date,col]&lt;df_creditspread.loc[date,'BBAND_lower']:
+        df_creditspread.loc[date,'position']=1.0
+    else:
+        df_creditspread.loc[date,'position']=pre_position
+    pre_position=df_creditspread.loc[date,'position']
+df_creditspread['position']=df_creditspread['position'].shift(1)
+
+df_pct=pd.DataFrame()
+prices = get_price('000300.XSHG',start_date='2005-01-01',end_date='2018-11-30',fields='close')['close']
+df_pct['pct']=prices.pct_change()
+
+rate_riskfree =0
+df_pct = pd.concat([df_pct,df_creditspread],axis=1)['2007-01-01':'2018-11-30'].dropna()
+df_pct['net_value'] =(df_pct['pct']+1).cumprod()
+df_pct['net_value_timing'] = (df_pct['pct']*df_pct['position']+rate_riskfree*(1-df_pct['position'])+1).cumprod()
+df_pct[['net_value','net_value_timing']].plot(figsize=(15,6),title='信用利差择时')
+
+#M1-M2
+
+body=read_file(path+'/信贷.xls')
+df_credit_loan_1=pd.read_excel(StringIO(body))
+df_credit_loan_1=df_credit_loan_1.set_index(u'日期')
+print df_credit_loan_1.columns
+col = u'社会融资规模:当月值'
+col_1 = u'M1:同比'
+col_2 = u'M2:同比'
+# col = col_1
+col = u'M1-M2'
+df_credit_loan_1[u'M1-M2'] = df_credit_loan_1[u'M1:同比']-df_credit_loan_1[u'M2:同比']
+n=3
+df_credit_loan_1.iloc[:,1:].plot(figsize=(15,6),title='M1,M2及剪刀差')
+
+
+df_credit_loan_1['position']=pd.rolling_mean(df_credit_loan_1[col],n).shift(2)&gt;pd.rolling_mean(df_credit_loan_1[col],n).shift(3)
+prices = get_price('000300.XSHG',start_date='2005-01-01',end_date='2018-11-30',fields='close')['close']
+prices_M = prices.resample('M',how='last')
+
+rate_riskfree = 0
+
+df_pct=pd.DataFrame()
+df_pct['pct']=prices_M.pct_change()
+df_pct['position']=df_credit_loan_1['position']
+df_pct['net_value'] =(df_pct['pct']+1).cumprod()
+df_pct['net_value_timing'] = (df_pct['pct']*df_pct['position']+rate_riskfree*(1-df_pct['position'])+1).cumprod()
+df_pct[['net_value','net_value_timing']].plot(figsize=(15,6),title='M1,M2剪刀差择时')
 </code></pre>
 
             </div>
