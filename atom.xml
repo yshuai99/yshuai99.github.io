@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2022-02-25T01:37:37.063Z</updated>
+    <updated>2022-02-25T01:39:06.011Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -340,7 +340,7 @@ SharpeRatio(test_return$return)
         <id>https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market-/</id>
         <link href="https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market-/">
         </link>
-        <updated>2021-12-07T22:54:41.000Z</updated>
+        <updated>2021-12-07T10:54:41.000Z</updated>
         <summary type="html"><![CDATA[<p>This blog analysis the performance of 9 macroeconomic factors timing strategy in Chinese stock market</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>This blog analysis the performance of 9 macroeconomic factors timing strategy in Chinese stock market</p>
@@ -833,6 +833,7 @@ df_pct['net_value'] =(df_pct['pct']+1)[start_date:].cumprod()
 df_pct['net_value_timing'] = (df_pct['pct']*df_pct['position']+rate_riskfree*(1-df_pct['position'])+1)[start_date:].cumprod()
 df_pct[['net_value','net_value_timing']].plot(figsize=(15,6),title='宏观指标综合择时(信贷系数=1)')
 </code></pre>
+<figure data-type="image" tabindex="1"><img src="https://yshuai99.github.io/post-images/1645753122870.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
     <entry>
