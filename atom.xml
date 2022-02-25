@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2022-02-24T15:16:25.380Z</updated>
+    <updated>2022-02-25T01:22:51.834Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -333,6 +333,79 @@ tail(cumsum(test_return$return),1)
 SharpeRatio(test_return$return)
 
 </code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[The performance of macroeconomic factors timing in Chinese stock market ]]></title>
+        <id>https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market-/</id>
+        <link href="https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market-/">
+        </link>
+        <updated>2021-12-10T10:54:41.000Z</updated>
+        <summary type="html"><![CDATA[<p>This blog analysis the performance of 9 macroeconomic factors timing strategy in Chinese stock market</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>This blog analysis the performance of 9 macroeconomic factors timing strategy in Chinese stock market</p>
+<!-- more -->
+<h1 id="key-points">Key points</h1>
+<ul>
+<li>I analyze the macroeconomic factors timing strategy in Chinese stock market and find that the single macroeconomic factor is not a good index to long/short Chinese stock market index. However, the 9 macroeconomic factors together is a good indicator to the Chinese stock maket.</li>
+<li>The 9 macroeconomic factors are from 5 main aspects of macroeconomic (Economic growth, Interest rate, Credit, Inflation and Exchange rate) and the factor timing strategy is based on the technological analysis tools: Bollinger Bands, Moving averages, etc.</li>
+</ul>
+<p>The idea of this blog is inspired by the Yujie Chu, the senior manager of Baofu Internet Technology. The data and python API was provided by Joinquant platform (joinquant.com).</p>
+<h1 id="macroeconomic-factors">Macroeconomic factors</h1>
+<h2 id="pmi">PMI</h2>
+<p>The Purchasing Managers' Index (PMI) is an index of the prevailing direction of economic trends in the manufacturing and service sectors. Its purpose is to provide information about current and future business conditions to company decision makers, analysts, and investors. The PMI is based on a monthly survey sent to senior executives and it is complied and released monthly.</p>
+<p>The headline PMI is a number from 0 to 100. A PMI above 50 represents an expansion when compared with the previous month. A PMI reading under 50 represents a contraction, and a reading at 50 indicates no change. The further away from 50 indicating the greater the level of change.</p>
+<blockquote>
+<p>Investors can also use the PMI to their advantage because it is a leading indicator of economic conditions. The direction of the trend in the PMI tends to precede changes in the trend in major estimates of economic activity and output, such as the GDP, Industrial Production, and Employment. Paying attention to the value and movements in the PMI can yield profitable foresight into developing trends in the overall economy.  (investopedia.com)</p>
+</blockquote>
+<h2 id="shibor">SHIBOR</h2>
+<p>The Shanghai Interbank Offered Rate is a  wholesale interest rate calculated by arithmetically averaging all the interbank RMB lending rates offered by the price quotation group of banks with a high credit rating. In this article, the SHIBOR with 1-month maturity is used, as it is reflect the pricing of middle and short term interest rate pricing and it has lower noise than the overnight interbank RMB lending rates.</p>
+<h2 id="yield-spread">Yield Spread</h2>
+<p>In this report, the yield spread is the difference of yield between 10 years government bonds and 1 year. It is the result of multiple of factors, such as fed target rate, real GDP growth, inflation and institutional demand. Usually it have a upwarding slope, meaning that the market hold positive expectation towards the economy situation. However, the yield curve would have a flat or even inverted curve if the market holds pessimistic expectations.</p>
+<p>Usually the inverted yield curve is surronded with higher interest rate and tight credit policy, which is a negative signal for stock market.</p>
+<h2 id="credit">Credit</h2>
+<p>Here the economic factors is the difference of yield between 1-month AAA corporate bond and 1-month government bonds. This spread also reflects the expectation of economic. It will increase during economic contraction period as investors would rather choose higher credit bonds such as government bonds. While during expansion time, investors hold optimistic towards the market and choose the bonds with lower credit to get higher return.</p>
+<h2 id="m1-m2">M1-M2</h2>
+<p>In this blog this factor would be the difference of increase rate between M1 and M2.</p>
+<blockquote></blockquote>
+<ul>
+<li>M0: The sum of Currency in Circulation</li>
+<li>M1: The sum of Currency with the Public, Demand Deposits with the Banking System</li>
+<li>M2: The sum of Currency with the Public, Current Deposits with the Banking System, Savings Deposits with the Banking System, Certificates of Deposits issued by Banks, Term Deposits of residents with a contractual maturity up to and including one year with the Banking System<br>
+(https://www.clearias.com/monetary-aggregates/)</li>
+</ul>
+<h2 id="aggregate-financing-to-the-real-economy">Aggregate Financing to the Real Economy</h2>
+<p>Aggregate Financing to the Real Economy refers to the aggregate volume of funds provided by China’s domestic financial system to the private sector of the real economy within a given timeframe.</p>
+<p>The Chinese government employs it as a liquidity measurement tool to abet the formation of monetary policy.</p>
+<h2 id="reserve-ratio">Reserve Ratio</h2>
+<p>The reserve ratio is the portion of reservable liabilities that commercial banks must hold onto, rather than lend out or invest. This is a requirement determined by the country's central bank. The minimum amount of reserves that a bank must hold on to is referred to as the reserve requirement, and is sometimes used synonymously with the reserve ratio.</p>
+<p>The relationship of reserve ratio with stock market is unsatble, but generally speaking the decreasing of reserve ratio is a positive sign for stock market.</p>
+<h2 id="usdcnh-spot-exchange-rate">USDCNH: Spot Exchange Rate</h2>
+<p>For emerging market, the expectation of spot rate reflects the stability of stock market and econoic condition.</p>
+<h2 id="ppi-cpi">PPI-CPI</h2>
+<p>CPI: Consumer Price Index, is a measure that examines the weighted average of prices of a basket of consumer goods and services, such as transportation, food, and medical care.<br>
+PPI: Producer Price Index, measures the average change over time in the selling prices received by domestic producers for their output. The prices included in the PPI are from the first commercial transaction for many products and some services.</p>
+<p>PPI-CPI reflect the difference of industrial goods and consumer goods.</p>
+<h1 id="analysis-method">Analysis method</h1>
+<h2 id="bollinger-band">Bollinger Band</h2>
+<p>Bollinger Band tells you:</p>
+<ul>
+<li>the overbuy and oversell</li>
+<li>trend<br>
+​<br>
+The calculation of Bollinger Band would be:</li>
+</ul>
+<p>BOLU=MA(TP,n)+m∗σ[TP,n]<br>
+BOLD=MA(TP,n)−m∗σ[TP,n]<br>
+where:<br>
+BOLU=Upper Bollinger Band<br>
+BOLD=Lower Bollinger Band<br>
+MA=Moving average<br>
+TP (typical price)=(High+Low+Close)÷3<br>
+n=Number of days in smoothing period (typically 20)<br>
+m=Number of standard deviations (typically 2)<br>
+σ[TP,n]=Standard Deviation over last n periods of TP<br>
+​</p>
 ]]></content>
     </entry>
     <entry>
@@ -732,48 +805,6 @@ def security_stoploss(context,loss=0.1):
                 log.info(str(stock) + '  Sell it！')
                 order_target_value(stock, 0)
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[The performance of macroeconomic factors timing in Chinese stock market (IN PROGRESS)]]></title>
-        <id>https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market/</id>
-        <link href="https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market/">
-        </link>
-        <updated>2021-06-10T21:54:41.000Z</updated>
-        <summary type="html"><![CDATA[<p>This blog analysis the performance of 9 macroeconomic factors timing strategy in Chinese stock market</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>This blog analysis the performance of 9 macroeconomic factors timing strategy in Chinese stock market</p>
-<!-- more -->
-<h1 id="key-points">Key points</h1>
-<ul>
-<li>I analyze the macroeconomic factors timing strategy in Chinese stock market and find that the single macroeconomic factor is not a good index to long/short Chinese stock market index. However, the 9 macroeconomic factors together is a good indicator to the Chinese stock maket.</li>
-<li>The 9 macroeconomic factors are from 5 main aspects of macroeconomic (Economic growth, Interest rate, Credit, Inflation and Exchange rate) and the factor timing strategy is based on the technological analysis tools: Bollinger Bands, Moving averages, etc.</li>
-</ul>
-<p>The idea of this blog is inspired by the Yujie Chu, the senior manager of Baofu Internet Technology. The data and python API was provided by Joinquant platform (joinquant.com).</p>
-<h1 id="macroeconomic-factors">Macroeconomic factors</h1>
-<h2 id="pmi">PMI</h2>
-<p>The Purchasing Managers' Index (PMI) is an index of the prevailing direction of economic trends in the manufacturing and service sectors. Its purpose is to provide information about current and future business conditions to company decision makers, analysts, and investors. The PMI is based on a monthly survey sent to senior executives and it is complied and released monthly.</p>
-<p>The headline PMI is a number from 0 to 100. A PMI above 50 represents an expansion when compared with the previous month. A PMI reading under 50 represents a contraction, and a reading at 50 indicates no change. The further away from 50 indicating the greater the level of change.</p>
-<blockquote>
-<p>Investors can also use the PMI to their advantage because it is a leading indicator of economic conditions. The direction of the trend in the PMI tends to precede changes in the trend in major estimates of economic activity and output, such as the GDP, Industrial Production, and Employment. Paying attention to the value and movements in the PMI can yield profitable foresight into developing trends in the overall economy.  (investopedia.com)</p>
-</blockquote>
-<h2 id="shibor">SHIBOR</h2>
-<p>The Shanghai Interbank Offered Rate is a  wholesale interest rate calculated by arithmetically averaging all the interbank RMB lending rates offered by the price quotation group of banks with a high credit rating. In this article, the SHIBOR with 1-month maturity is used, as it is reflect the pricing of middle and short term interest rate pricing and it has lower noise than the overnight interbank RMB lending rates.</p>
-<h2 id="yield-spread">Yield Spread</h2>
-<p>In this report, the yield spread is the difference of yield between 10 years government bonds and 1 year. It is the result of multiple of factors, such as fed target rate, real GDP growth, inflation and institutional demand. Usually it have a upwarding slope, meaning that the market hold positive expectation towards the economy situation. However, the yield curve would have a flat or even inverted curve if the market holds pessimistic expectations.</p>
-<p>Usually the inverted yield curve is surronded with higher interest rate and tight credit policy, which is a negative signal for stock market.</p>
-<h2 id="credit">Credit</h2>
-<p>Here the economic factors is the difference of yield between 1-month AAA corporate bond and 1-month government bonds. This spread also reflects the expectation of economic. It will increase during economic contraction period as investors would rather choose higher credit bonds such as government bonds. While during expansion time, investors hold optimistic towards the market and choose the bonds with lower credit to get higher return.</p>
-<h2 id="m1-m2">M1-M2</h2>
-<p>In this blog this factor would be the difference of increase rate between M1 and M2.</p>
-<blockquote></blockquote>
-<ul>
-<li>M0: The sum of Currency in Circulation</li>
-<li>M1: The sum of Currency with the Public, Demand Deposits with the Banking System</li>
-<li>M2: The sum of Currency with the Public, Current Deposits with the Banking System, Savings Deposits with the Banking System, Certificates of Deposits issued by Banks, Term Deposits of residents with a contractual maturity up to and including one year with the Banking System<br>
-(https://www.clearias.com/monetary-aggregates/)</li>
-</ul>
-<p>Generally the increasing rate of M1 and M2 should</p>
 ]]></content>
     </entry>
 </feed>
