@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2022-02-25T01:39:06.011Z</updated>
+    <updated>2022-02-25T01:42:22.296Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -15,7 +15,7 @@
         <id>https://yshuai99.github.io/post/introduction/</id>
         <link href="https://yshuai99.github.io/post/introduction/">
         </link>
-        <updated>2022-02-22T23:38:45.000Z</updated>
+        <updated>2022-02-22T11:38:45.000Z</updated>
         <summary type="html"><![CDATA[<p>Hi, I am Yuxin Shuai. I am working on quantitative trading and business data analysis.</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>Hi, I am Yuxin Shuai. I am working on quantitative trading and business data analysis.</p>
@@ -33,7 +33,7 @@
 <h2 id="reports">Reports</h2>
 <ul>
 <li>
-<p><a href="https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market/">The performance of macroeconomic factors timing in Chinese stock market (IN PROGRESS)</a></p>
+<p><a href="https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market-/">The performance of macroeconomic factors timing in Chinese stock market </a></p>
 </li>
 <li>
 <p><a href="">Effectiveness of Some Fundamental Factors in China Stock Market (In Progress)</a></p>
