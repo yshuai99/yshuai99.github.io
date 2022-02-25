@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2022-02-25T01:42:22.296Z</updated>
+    <updated>2022-02-25T01:43:16.835Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -15,10 +15,10 @@
         <id>https://yshuai99.github.io/post/introduction/</id>
         <link href="https://yshuai99.github.io/post/introduction/">
         </link>
-        <updated>2022-02-22T11:38:45.000Z</updated>
-        <summary type="html"><![CDATA[<p>Hi, I am Yuxin Shuai. I am working on quantitative trading and business data analysis.</p>
+        <updated>2022-02-21T23:38:45.000Z</updated>
+        <summary type="html"><![CDATA[<p>Here is Yuxin Shuai. I am working on quantitative trading and data analysis.</p>
 ]]></summary>
-        <content type="html"><![CDATA[<p>Hi, I am Yuxin Shuai. I am working on quantitative trading and business data analysis.</p>
+        <content type="html"><![CDATA[<p>Here is Yuxin Shuai. I am working on quantitative trading and data analysis.</p>
 <!-- more -->
 <p>Here is the contents of this blog:</p>
 <h2 id="technological-analysis">Technological analysis:</h2>
