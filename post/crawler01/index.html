@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>Hollween Effect Strategy | yshuai</title>
+<title>Web crawler with Python -01 (Douban movies TOP 250)  | yshuai</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -24,10 +24,8 @@
 
 
 
-    <meta name="description" content="The holloween effect strategy is based on python 3.6 and jq module.
-
-The strategy is developed based on jq module (joinq..." />
-    <meta name="keywords" content="Quantative Trading" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="python" />
   </head>
   <body>
     <div id="app" class="main">
@@ -92,45 +90,17 @@ The strategy is developed based on jq module (joinq..." />
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">Hollween Effect Strategy</h2>
-            <div class="post-date">2021-06-15</div>
+            <h2 class="post-title">Web crawler with Python -01 (Douban movies TOP 250) </h2>
+            <div class="post-date">2022-03-13</div>
             
             <div class="post-content" v-pre>
-              <p>The holloween effect strategy is based on python 3.6 and jq module.</p>
-<!-- more -->
-<p>The strategy is developed based on jq module (joinquant.com)</p>
-<blockquote></blockquote>
-<p>The Halloween effect is a market-timing strategy based on the hypothesis that stocks perform better between Oct. 31 (Halloween) and May 1 than they do between the beginning of May through the end of October. (Investopedia.com)</p>
-<h2 id="code">code</h2>
-<pre><code class="language-python">def initialize(context):
-    set_option('use_real_price', True)
-
-    # Set up the trading stocks
-    g.stocks = ['000001.XSHE','600000.XSHG','600019.XSHG','600028.XSHG','600030.XSHG','600036.XSHG','600519.XSHG','601398.XSHG','601857.XSHG','601988.XSHG']
-
-
-def handle_data(context, data):
-    cash = context.portfolio.available_cash / len(g.stocks)
-    hist = history(1,'1d','close',g.stocks)
-    for security in g.stocks:
-        today = context.current_dt
-        current_price = hist[security][0]
-        # If the current time is larger than October 15th, buy it.
-        if today.month == 10 and today.day &gt; 15 and cash &gt; current_price and context.portfolio.positions[security].closeable_amount == 0:
-            order_value(security, cash)
-            log.info(&quot;Buying %s&quot; % (security))
-        # If the current time is larger than May 5th, then sell it
-        elif today.month == 5 and today.day &gt; 15 and context.portfolio.positions[security].closeable_amount &gt; 0:
-            order_target(security, 0)
-            log.info(&quot;Selling %s&quot; % (security))
-</code></pre>
-
+              
             </div>
             
               <div class="tag-container">
                 
-                  <a href="https://yshuai99.github.io/tag/AH91WmPtY/" class="tag">
-                    Quantative Trading
+                  <a href="https://yshuai99.github.io/tag/SCyFn5SDi/" class="tag">
+                    python
                   </a>
                 
               </div>
@@ -138,9 +108,9 @@ def handle_data(context, data):
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://yshuai99.github.io/post/basic/">
+                <a href="https://yshuai99.github.io/post/introduction/">
                   <h3 class="post-title">
-                    Basic MACD Strategy 
+                    Introduction
                   </h3>
                 </a>
               </div>
