@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://yshuai99.github.io/favicon.ico?v=1653244575993">
+<link rel="shortcut icon" href="https://yshuai99.github.io/favicon.ico?v=1653244783926">
 <link rel="stylesheet" href="https://yshuai99.github.io/styles/main.css">
 
 
@@ -24,7 +24,8 @@
 
 
 
-    <meta name="description" content="A simple  crawler, the target is finding the top 250 rated movies listed in Douban (A Chinese movie rating website) and ..." />
+    <meta name="description" content="Introduction
+A simple  crawler, the target is finding the top 250 rated movies listed in Douban (A Chinese movie rating ..." />
     <meta name="keywords" content="python" />
   </head>
   <body>
@@ -34,7 +35,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://yshuai99.github.io">
-        <img src="https://yshuai99.github.io/images/avatar.png?v=1653244575993" class="site-logo">
+        <img src="https://yshuai99.github.io/images/avatar.png?v=1653244783926" class="site-logo">
         <h1 class="site-title">yshuai</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -91,10 +92,11 @@
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
             <h2 class="post-title">Web crawler with Python -01 (Douban movies TOP 250) </h2>
-            <div class="post-date">2022-03-12</div>
+            <div class="post-date">2022-03-11</div>
             
             <div class="post-content" v-pre>
-              <p>A simple  crawler, the target is finding the top 250 rated movies listed in Douban (A Chinese movie rating website) and the web page is: http://movie.douban.com/top250/.</p>
+              <h1 id="introduction">Introduction</h1>
+<p>A simple  crawler, the target is finding the top 250 rated movies listed in Douban (A Chinese movie rating website) and the web page is: http://movie.douban.com/top250/.</p>
 <p>Read the html first:</p>
 <ul>
 <li>The title of the movies is stored in &quot;li&quot; class:<br>
@@ -102,6 +104,8 @@
 <li>The <strong>next page</strong> link is stored in the &quot;next&quot; class:<br>
 <img src="https://yshuai99.github.io/post-images/1653244382592.png" alt="" loading="lazy"></li>
 </ul>
+<h1 id="code">Code</h1>
+<p>Then come up with the code:</p>
 <pre><code class="language-python">#!/usr/bin/env python
 # encoding=utf-8
 

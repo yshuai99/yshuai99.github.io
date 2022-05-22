@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2022-05-22T18:36:17.847Z</updated>
+    <updated>2022-05-22T18:39:46.051Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -15,7 +15,7 @@
         <id>https://yshuai99.github.io/post/introduction/</id>
         <link href="https://yshuai99.github.io/post/introduction/">
         </link>
-        <updated>2022-05-22T11:38:45.000Z</updated>
+        <updated>2022-05-22T00:38:45.000Z</updated>
         <summary type="html"><![CDATA[<p>Here is Yuxin Shuai. I am working on quantitative trading and data analysis.</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>Here is Yuxin Shuai. I am working on quantitative trading and data analysis.</p>
@@ -23,7 +23,7 @@
 <p>Here is the contents of this blog:</p>
 <h2 id="small-projects-for-fun">Small projects for FUN:</h2>
 <ul>
-<li><a href="">Web crawler with Python -01 (douban movies TOP 250)</a></li>
+<li><a href="https://yshuai99.github.io/post/crawler01/">Web crawler with Python -01 (douban movies TOP 250)</a></li>
 </ul>
 <h2 id="technological-analysis">Technological analysis:</h2>
 <ul>
@@ -55,8 +55,9 @@
         <id>https://yshuai99.github.io/post/crawler01/</id>
         <link href="https://yshuai99.github.io/post/crawler01/">
         </link>
-        <updated>2022-03-12T08:10:47.000Z</updated>
-        <content type="html"><![CDATA[<p>A simple  crawler, the target is finding the top 250 rated movies listed in Douban (A Chinese movie rating website) and the web page is: http://movie.douban.com/top250/.</p>
+        <updated>2022-03-11T20:10:47.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1>
+<p>A simple  crawler, the target is finding the top 250 rated movies listed in Douban (A Chinese movie rating website) and the web page is: http://movie.douban.com/top250/.</p>
 <p>Read the html first:</p>
 <ul>
 <li>The title of the movies is stored in &quot;li&quot; class:<br>
@@ -64,6 +65,8 @@
 <li>The <strong>next page</strong> link is stored in the &quot;next&quot; class:<br>
 <img src="https://yshuai99.github.io/post-images/1653244382592.png" alt="" loading="lazy"></li>
 </ul>
+<h1 id="code">Code</h1>
+<p>Then come up with the code:</p>
 <pre><code class="language-python">#!/usr/bin/env python
 # encoding=utf-8
 
