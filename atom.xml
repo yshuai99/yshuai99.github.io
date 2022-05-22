@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2022-05-22T18:35:56.351Z</updated>
+    <updated>2022-05-22T18:36:17.847Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -10,6 +10,46 @@
     <logo>https://yshuai99.github.io/images/avatar.png</logo>
     <icon>https://yshuai99.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, yshuai</rights>
+    <entry>
+        <title type="html"><![CDATA[Introduction]]></title>
+        <id>https://yshuai99.github.io/post/introduction/</id>
+        <link href="https://yshuai99.github.io/post/introduction/">
+        </link>
+        <updated>2022-05-22T11:38:45.000Z</updated>
+        <summary type="html"><![CDATA[<p>Here is Yuxin Shuai. I am working on quantitative trading and data analysis.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Here is Yuxin Shuai. I am working on quantitative trading and data analysis.</p>
+<!-- more -->
+<p>Here is the contents of this blog:</p>
+<h2 id="small-projects-for-fun">Small projects for FUN:</h2>
+<ul>
+<li><a href="">Web crawler with Python -01 (douban movies TOP 250)</a></li>
+</ul>
+<h2 id="technological-analysis">Technological analysis:</h2>
+<ul>
+<li><a href="https://yshuai99.github.io/post/hollween-effect-strategy/">Holloween effect strategy</a></li>
+<li><a href="https://yshuai99.github.io/post/movie-industry-stocks-timing/">Movie industry stocks timing</a></li>
+<li><a href="https://yshuai99.github.io/post/golden-cross-strategy/">Golden cross strategy</a></li>
+<li><a href="https://yshuai99.github.io/post/basic/">Basic MACD strategy</a></li>
+<li><a href="https://yshuai99.github.io/post/triangular-arbitrage/">Triangular Arbitrage </a></li>
+<li><a href="https://yshuai99.github.io/post/pairs-trading-in-progress_/">Pairs Trading</a></li>
+</ul>
+<h2 id="reports">Reports</h2>
+<ul>
+<li>
+<p><a href="https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market-/">The performance of macroeconomic factors timing in Chinese stock market </a></p>
+</li>
+<li>
+<p><a href="">Effectiveness of Some Fundamental Factors in China Stock Market (In Progress)</a></p>
+</li>
+</ul>
+<h2 id="projects">Projects</h2>
+<ul>
+<li>[Fama-Macbeth Regression (In progress)]</li>
+<li>[Mean-Variance portfolio with optimization (In progress)]</li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Web crawler with Python -01 (Douban movies TOP 250) ]]></title>
         <id>https://yshuai99.github.io/post/crawler01/</id>
@@ -73,46 +113,6 @@ def main():
 if __name__ == '__main__':
     main()
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Introduction]]></title>
-        <id>https://yshuai99.github.io/post/introduction/</id>
-        <link href="https://yshuai99.github.io/post/introduction/">
-        </link>
-        <updated>2022-02-20T23:38:45.000Z</updated>
-        <summary type="html"><![CDATA[<p>Here is Yuxin Shuai. I am working on quantitative trading and data analysis.</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>Here is Yuxin Shuai. I am working on quantitative trading and data analysis.</p>
-<!-- more -->
-<p>Here is the contents of this blog:</p>
-<h2 id="small-projects-for-fun">Small projects for FUN:</h2>
-<ul>
-<li><a href="">Web crawler with Python -01 (douban movies TOP 250)</a></li>
-</ul>
-<h2 id="technological-analysis">Technological analysis:</h2>
-<ul>
-<li><a href="https://yshuai99.github.io/post/hollween-effect-strategy/">Holloween effect strategy</a></li>
-<li><a href="https://yshuai99.github.io/post/movie-industry-stocks-timing/">Movie industry stocks timing</a></li>
-<li><a href="https://yshuai99.github.io/post/golden-cross-strategy/">Golden cross strategy</a></li>
-<li><a href="https://yshuai99.github.io/post/basic/">Basic MACD strategy</a></li>
-<li><a href="https://yshuai99.github.io/post/triangular-arbitrage/">Triangular Arbitrage </a></li>
-<li><a href="https://yshuai99.github.io/post/pairs-trading-in-progress_/">Pairs Trading</a></li>
-</ul>
-<h2 id="reports">Reports</h2>
-<ul>
-<li>
-<p><a href="https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market-/">The performance of macroeconomic factors timing in Chinese stock market </a></p>
-</li>
-<li>
-<p><a href="">Effectiveness of Some Fundamental Factors in China Stock Market (In Progress)</a></p>
-</li>
-</ul>
-<h2 id="projects">Projects</h2>
-<ul>
-<li>[Fama-Macbeth Regression (In progress)]</li>
-<li>[Mean-Variance portfolio with optimization (In progress)]</li>
-</ul>
 ]]></content>
     </entry>
     <entry>
