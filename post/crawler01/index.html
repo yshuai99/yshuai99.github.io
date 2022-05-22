@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://yshuai99.github.io/favicon.ico?v=1653243101577">
+<link rel="shortcut icon" href="https://yshuai99.github.io/favicon.ico?v=1653244554567">
 <link rel="stylesheet" href="https://yshuai99.github.io/styles/main.css">
 
 
@@ -24,7 +24,7 @@
 
 
 
-    <meta name="description" content="" />
+    <meta name="description" content="A simple  crawler, the target is finding the top 250 rated movies listed in Douban (A Chinese movie rating website) and ..." />
     <meta name="keywords" content="python" />
   </head>
   <body>
@@ -34,7 +34,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://yshuai99.github.io">
-        <img src="https://yshuai99.github.io/images/avatar.png?v=1653243101577" class="site-logo">
+        <img src="https://yshuai99.github.io/images/avatar.png?v=1653244554567" class="site-logo">
         <h1 class="site-title">yshuai</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -91,10 +91,67 @@
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
             <h2 class="post-title">Web crawler with Python -01 (Douban movies TOP 250) </h2>
-            <div class="post-date">2022-03-13</div>
+            <div class="post-date">2022-03-12</div>
             
             <div class="post-content" v-pre>
-              
+              <p>A simple  crawler, the target is finding the top 250 rated movies listed in Douban (A Chinese movie rating website) and the web page is: http://movie.douban.com/top250/.</p>
+<p>Read the html first:</p>
+<ul>
+<li>The title of the movies is stored in &quot;li&quot; class:<br>
+<img src="https://yshuai99.github.io/post-images/1653244323285.png" alt="" loading="lazy"></li>
+<li>The <strong>next page</strong> link is stored in the &quot;next&quot; class:<br>
+<img src="https://yshuai99.github.io/post-images/1653244382592.png" alt="" loading="lazy"></li>
+</ul>
+<pre><code class="language-python">#!/usr/bin/env python
+# encoding=utf-8
+
+import codecs
+import requests
+from bs4 import BeautifulSoup
+
+DOWNLOAD_URL = 'http://movie.douban.com/top250/'
+
+# User-Agent
+def download_page(url):
+    return requests.get(url, headers={
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36'
+    }).content
+
+# find the title of the movies
+
+def parse_html(html):
+    soup = BeautifulSoup(html)
+    movie_list_soup = soup.find('ol', attrs={'class': 'grid_view'})
+
+    movie_name_list = []
+
+    for movie_li in movie_list_soup.find_all('li'):
+        detail = movie_li.find('div', attrs={'class': 'hd'})
+        movie_name = detail.find('span', attrs={'class': 'title'}).getText()
+
+        movie_name_list.append(movie_name)
+
+# It has ten pages with 25 movies per page, find the next page link
+    next_page = soup.find('span', attrs={'class': 'next'}).find('a')
+    if next_page:
+        return movie_name_list, DOWNLOAD_URL + next_page['href']
+    return movie_name_list, None
+
+
+def main():
+    url = DOWNLOAD_URL
+
+    with codecs.open('laocheng', 'wb', encoding='utf-8') as fp:
+        while url:
+            html = download_page(url)
+            movies, url = parse_html(html)
+            fp.write(u'{movies}\n'.format(movies='\n'.join(movies)))
+
+
+if __name__ == '__main__':
+    main()
+</code></pre>
+
             </div>
             
               <div class="tag-container">
