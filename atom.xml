@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2022-05-22T18:39:46.051Z</updated>
+    <updated>2022-05-22T18:41:35.087Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -55,7 +55,7 @@
         <id>https://yshuai99.github.io/post/crawler01/</id>
         <link href="https://yshuai99.github.io/post/crawler01/">
         </link>
-        <updated>2022-03-11T20:10:47.000Z</updated>
+        <updated>2022-03-11T08:10:47.000Z</updated>
         <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1>
 <p>A simple  crawler, the target is finding the top 250 rated movies listed in Douban (A Chinese movie rating website) and the web page is: http://movie.douban.com/top250/.</p>
 <p>Read the html first:</p>
