@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2022-05-22T18:41:35.087Z</updated>
+    <updated>2022-05-23T00:53:46.157Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -15,7 +15,7 @@
         <id>https://yshuai99.github.io/post/introduction/</id>
         <link href="https://yshuai99.github.io/post/introduction/">
         </link>
-        <updated>2022-05-22T00:38:45.000Z</updated>
+        <updated>2022-05-21T02:38:45.000Z</updated>
         <summary type="html"><![CDATA[<p>Here is Yuxin Shuai. I am working on quantitative trading and data analysis.</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>Here is Yuxin Shuai. I am working on quantitative trading and data analysis.</p>
@@ -23,7 +23,12 @@
 <p>Here is the contents of this blog:</p>
 <h2 id="small-projects-for-fun">Small projects for FUN:</h2>
 <ul>
-<li><a href="https://yshuai99.github.io/post/crawler01/">Web crawler with Python -01 (douban movies TOP 250)</a></li>
+<li>
+<p><a href="">Difference visualization between two csv file</a></p>
+</li>
+<li>
+<p><a href="https://yshuai99.github.io/post/crawler01/">Web crawler with Python -01 (douban movies TOP 250)</a></p>
+</li>
 </ul>
 <h2 id="technological-analysis">Technological analysis:</h2>
 <ul>
@@ -48,6 +53,68 @@
 <li>[Fama-Macbeth Regression (In progress)]</li>
 <li>[Mean-Variance portfolio with optimization (In progress)]</li>
 </ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Difference visualization between two csv file]]></title>
+        <id>https://yshuai99.github.io/post/difflib/</id>
+        <link href="https://yshuai99.github.io/post/difflib/">
+        </link>
+        <updated>2022-04-01T10:01:55.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1>
+<p>By using the <a href="https://docs.python.org/3/library/difflib.html">difflib library</a>, the difference between two csv could be visualized:</p>
+<figure data-type="image" tabindex="1"><img src="https://yshuai99.github.io/post-images/1653267133053.jpg" alt="" loading="lazy"></figure>
+<h1 id="visualization">Visualization</h1>
+<pre><code class="language-python">import sys
+import difflib
+ 
+ 
+def readfile(file1):
+    try:
+        fd=open(file1,&quot;r&quot;)
+        text=fd.read().splitlines() 
+        return text
+    except Exception as e:
+        print(&quot;read file error&quot;)
+        print(e)
+        sys.exit()
+ 
+ 
+ 
+def Compare(file_1,file_2):
+    if file_1 ==&quot;&quot; or file_2 == &quot;&quot;:
+        print(&quot;file 1 or file 2 not empty&quot;)
+        sys.exit()
+ 
+    text1=readfile(file_1)
+    text2=readfile(file_2)
+ 
+    diff=difflib.HtmlDiff() 
+    result=diff.make_file(text1,text2)  
+ 
+    try:
+        fd_diff=open(&quot;diff.html&quot;,&quot;w&quot;)
+        fd_diff.write(result)
+ 
+    except Exception as e:
+        print(&quot;write html file error&quot;)
+        print(e)
+        sys.exit()
+ 
+ 
+if __name__ == '__main__':
+    Compare(&quot;original.csv&quot;,&quot;updated.csv&quot;)
+</code></pre>
+<h1 id="an-easy-way-to-export-the-difference-into-new-csv-file">An easy way to export the difference into new csv file</h1>
+<pre><code class="language-python">with open('original.csv', 'r') as csv1, open('updated.csv', 'r') as csv2:  # Import CSV files
+    import1 = csv1.readlines()
+    import2 = csv2.readlines()
+
+with open('data_diff.csv', 'w') as outFile:         # Create CSV file with differences
+    for row in import2:
+        if row not in import1:
+            outFile.write(row)
+</code></pre>
 ]]></content>
     </entry>
     <entry>

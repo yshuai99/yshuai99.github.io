@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>Mean-Variance portfolio with optimization (In progress) | yshuai</title>
+<title>Difference visualization between two csv file | yshuai</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -24,10 +24,12 @@
 
 
 
-    <meta name="description" content="Here is the R code and examples for Mean-Variance portfolio with optimization.
+    <meta name="description" content="Introduction
+By using the difflib library, the difference between two csv could be visualized:
 
-" />
-    <meta name="keywords" content="" />
+Visualization
+import sys..." />
+    <meta name="keywords" content="python" />
   </head>
   <body>
     <div id="app" class="main">
@@ -92,15 +94,84 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">Mean-Variance portfolio with optimization (In progress)</h2>
-            <div class="post-date">2021-06-24</div>
+            <h2 class="post-title">Difference visualization between two csv file</h2>
+            <div class="post-date">2022-04-01</div>
             
             <div class="post-content" v-pre>
-              <p>Here is the R code and examples for Mean-Variance portfolio with optimization.</p>
-<!-- more -->
+              <h1 id="introduction">Introduction</h1>
+<p>By using the <a href="https://docs.python.org/3/library/difflib.html">difflib library</a>, the difference between two csv could be visualized:</p>
+<figure data-type="image" tabindex="1"><img src="https://yshuai99.github.io/post-images/1653267133053.jpg" alt="" loading="lazy"></figure>
+<h1 id="visualization">Visualization</h1>
+<pre><code class="language-python">import sys
+import difflib
+ 
+ 
+def readfile(file1):
+    try:
+        fd=open(file1,&quot;r&quot;)
+        text=fd.read().splitlines() 
+        return text
+    except Exception as e:
+        print(&quot;read file error&quot;)
+        print(e)
+        sys.exit()
+ 
+ 
+ 
+def Compare(file_1,file_2):
+    if file_1 ==&quot;&quot; or file_2 == &quot;&quot;:
+        print(&quot;file 1 or file 2 not empty&quot;)
+        sys.exit()
+ 
+    text1=readfile(file_1)
+    text2=readfile(file_2)
+ 
+    diff=difflib.HtmlDiff() 
+    result=diff.make_file(text1,text2)  
+ 
+    try:
+        fd_diff=open(&quot;diff.html&quot;,&quot;w&quot;)
+        fd_diff.write(result)
+ 
+    except Exception as e:
+        print(&quot;write html file error&quot;)
+        print(e)
+        sys.exit()
+ 
+ 
+if __name__ == '__main__':
+    Compare(&quot;original.csv&quot;,&quot;updated.csv&quot;)
+</code></pre>
+<h1 id="an-easy-way-to-export-the-difference-into-new-csv-file">An easy way to export the difference into new csv file</h1>
+<pre><code class="language-python">with open('original.csv', 'r') as csv1, open('updated.csv', 'r') as csv2:  # Import CSV files
+    import1 = csv1.readlines()
+    import2 = csv2.readlines()
+
+with open('data_diff.csv', 'w') as outFile:         # Create CSV file with differences
+    for row in import2:
+        if row not in import1:
+            outFile.write(row)
+</code></pre>
 
             </div>
             
+              <div class="tag-container">
+                
+                  <a href="https://yshuai99.github.io/tag/SCyFn5SDi/" class="tag">
+                    python
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://yshuai99.github.io/post/crawler01/">
+                  <h3 class="post-title">
+                    Web crawler with Python -01 (Douban movies TOP 250) 
+                  </h3>
+                </a>
+              </div>
             
 
             
