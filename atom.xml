@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2022-05-24T19:32:07.332Z</updated>
+    <updated>2022-05-24T19:34:02.417Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -1115,7 +1115,7 @@ df_pct[['net_value','net_value_timing']].plot(figsize=(15,6),title='宏观指标
         <id>https://yshuai99.github.io/post/fundamental-factors/</id>
         <link href="https://yshuai99.github.io/post/fundamental-factors/">
         </link>
-        <updated>2021-06-23T06:57:25.000Z</updated>
+        <updated>2021-06-22T19:57:25.000Z</updated>
         <summary type="html"><![CDATA[<p>I analyzed the collinearity, exposure and IC of 8 fundamental factors in China stock market.</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>I analyzed the collinearity, exposure and IC of 8 fundamental factors in China stock market.</p>
