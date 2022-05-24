@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>Mean-Variance portfolio with optimization (In progress) | yshuai</title>
+<title>SELECT queries -01 | yshuai</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -24,9 +24,15 @@
 
 
 
-    <meta name="description" content="Here is the R code and examples for Mean-Variance portfolio with optimization.
+    <meta name="description" content="Simple Select
+select classNo, className, institute
+from Class
 
-" />
+select distinct institute
+from Class
+
+select * 
+from Clas..." />
     <meta name="keywords" content="" />
   </head>
   <body>
@@ -92,15 +98,94 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">Mean-Variance portfolio with optimization (In progress)</h2>
-            <div class="post-date">2021-06-24</div>
+            <h2 class="post-title">SELECT queries -01</h2>
+            <div class="post-date">2022-05-23</div>
             
             <div class="post-content" v-pre>
-              <p>Here is the R code and examples for Mean-Variance portfolio with optimization.</p>
-<!-- more -->
+              <h2 id="simple-select">Simple Select</h2>
+<pre><code class="language-SQL">select classNo, className, institute
+from Class
+
+select distinct institute
+from Class
+
+select * 
+from Class
+
+select classNo, className, institute
+from class
+where grade=2015
+
+select studentNo, studentName, birthday
+from student
+where year(getdate())-year(birthday) &gt;= 19
+
+select studentNo, courseNo, score
+from score
+where score between 80 and 90
+
+select studentNo, courseNo, score
+from score
+where score not between 80 and 90
+
+select studentNo, courseNo, score
+from score
+where courseNo in ('001','005','003')
+
+select studentNo, courseNo, score
+from score
+where courseNo='001' or courseNo='005' or courseNo='003'
+
+select studentName, native, classNo
+from student
+where native not in ('南昌','上海')
+
+select * 
+from course
+where priorCourse is Null
+
+select * 
+from course
+where priorCourse is not Null
+
+select *
+from class
+where className LIKE '%会计%'
+
+SELECT studentNo, studentName
+FROM Student
+WHERE studentName LIKE '王__'
+
+SELECT studentName, native, classNo
+FROM Student
+WHERE native!='南昌 ' AND native!='上海'
+
+SELECT studentNo, studentName, classNo, birthday
+FROM Student
+WHERE sex='女'
+ORDER BY classNo, month (birthday) DESC
+
+SELECT studentNo, studentName, birthday
+FROM (SELECT * FROM Student WHERE sex='女') AS a
+WHERE year (birthday)=1999
+
+SELECT studentNo , count(*) 门数 , avg(score) 平均分, max(score)最高分
+FROM Score
+GROUP BY studentNo
+HAVING avg (score)&gt;=80
+</code></pre>
 
             </div>
             
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://yshuai99.github.io/post/dml-exercise-01/">
+                  <h3 class="post-title">
+                    DML exercise -01
+                  </h3>
+                </a>
+              </div>
             
 
             
