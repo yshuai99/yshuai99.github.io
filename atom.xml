@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2022-05-24T20:15:06.379Z</updated>
+    <updated>2022-05-24T21:21:16.102Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -145,7 +145,7 @@ WHERE score =(SELECT max(score) FROM Score)
         <id>https://yshuai99.github.io/post/introduction/</id>
         <link href="https://yshuai99.github.io/post/introduction/">
         </link>
-        <updated>2022-05-18T08:38:45.000Z</updated>
+        <updated>2022-05-17T21:38:45.000Z</updated>
         <summary type="html"><![CDATA[<p>Here is Yuxin Shuai. I am working on quantitative trading and data analysis.</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>Here is Yuxin Shuai. I am working on quantitative trading and data analysis.</p>
@@ -163,7 +163,6 @@ WHERE score =(SELECT max(score) FROM Score)
 <h2 id="sql-exercise">SQL exercise:</h2>
 <ul>
 <li><a href="">DML exercise -01</a></li>
-<li><a href="">DML exercise -02</a></li>
 </ul>
 <h2 id="technological-analysis">Technological analysis:</h2>
 <ul>
