@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2022-05-24T19:27:20.676Z</updated>
+    <updated>2022-05-24T19:31:43.363Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -1111,6 +1111,345 @@ df_pct[['net_value','net_value_timing']].plot(figsize=(15,6),title='宏观指标
 ]]></content>
     </entry>
     <entry>
+        <title type="html"><![CDATA[Effectiveness of Some Fundamental Factors in China Stock Market]]></title>
+        <id>https://yshuai99.github.io/post/fundamental-factors/</id>
+        <link href="https://yshuai99.github.io/post/fundamental-factors/">
+        </link>
+        <updated>2021-06-23T06:57:25.000Z</updated>
+        <summary type="html"><![CDATA[<p>I analyzed the collinearity, exposure and IC of 8 fundamental factors in China stock market.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>I analyzed the collinearity, exposure and IC of 8 fundamental factors in China stock market.</p>
+<!-- more -->
+<pre><code class="language-python">from jqdata import *
+import datetime
+import pandas as pd
+import numpy as np
+from six import StringIO
+import warnings
+import time
+import pickle
+from jqfactor import winsorize_med
+from jqfactor import neutralize
+from jqfactor import standardlize
+import statsmodels.api as sm
+warnings.filterwarnings(&quot;ignore&quot;)
+matplotlib.rcParams['axes.unicode_minus']=False
+</code></pre>
+<pre><code class="language-python">import matplotlib.pyplot as plt
+
+Fields = ['turnover_ratio', 'pe_ratio', 'market_cap', 'capitalization', 'eps', 'roe', 'inc_net_profit_year_on_year', 'volume']
+def getExplore(index):
+    if index == 'SH50':
+        index = '000016.XSHG'
+    if index == 'HS300':
+        index = '000300.XSHG'
+    if index == 'ZZ500':
+        index = '000905.XSHG'
+    explore = pd.DataFrame(index = TradeDate)
+    for i in Fields:#对于每一个单独的因子
+        tempExplore = []
+        for date in TradeDate:
+            stockList = get_index_stocks(index, date)#获取指定日期的股票列表
+            temp = factorData[date][[i]]#对于每一支股票和单独的因子，在每一个交易日下
+            temp = temp.sort([i],ascending = False)#将每日因子从大到小排列
+            temp['rank'] = range(len(temp)+1, 1, -1)#给排列好的因子加上序号
+            #获取因子在某一交易日的暴露度
+            tempExplore.append((temp.loc[stockList,'rank'].mean() - len(temp) / 2) / len(temp))
+        explore[i] = tempExplore
+    return explore
+result_SH50 = []
+result_HS300 = []
+result_ZZ500 = []
+explore1 = getExplore('SH50')
+explore2 = getExplore('HS300')
+explore3 = getExplore('ZZ500')
+for i in Fields:#获取因子的平均暴露度
+    result_SH50.append(explore1[i].mean())
+    result_HS300.append(explore2[i].mean())
+    result_ZZ500.append(explore3[i].mean())
+</code></pre>
+<pre><code class="language-python">Year= ['2014', '2015', '2016', '2017', '2018']
+Fields = ['turnover_ratio', 'pe_ratio', 'market_cap', 'capitalization', 'eps', 'roe', 'inc_net_profit_year_on_year', 'volume']
+total1 = pd.DataFrame()
+total2 = pd.DataFrame()
+total3 = pd.DataFrame()
+for i in range(len(Year)):#获取因子的年度平均暴露度
+    total1[Year[i]] = explore1.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+    total2[Year[i]] = explore2.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+    total3[Year[i]] = explore3.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+x = np.array(range(len(Year)))
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total1.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;SH50&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+x = np.array(range(len(Year)))
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total2.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;HS300&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+x = np.array(range(len(Year)))
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total3.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;ZZ500&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+</code></pre>
+<pre><code class="language-python">def getCorr(index):#计算相关性
+    if index == 'SH50':
+        index = '000016.XSHG'
+    if index == 'HS300':
+        index = '000300.XSHG'
+    if index == 'ZZ500':
+        index = '000905.XSHG'
+    corr = {}
+    for date in TradeDate:
+        stockList = get_index_stocks(index, date)
+        temp = factorData[date].loc[stockList,:]
+        corr[date] = temp.corr()
+    corr = pd.Panel.from_dict(corr)
+    return corr
+corr_SH50 = getCorr('SH50')
+corr_HS300 = getCorr('HS300')
+corr_ZZ500 = getCorr('ZZ500')
+
+import seaborn as sns#计算相关性标准差，由corr_.mean实现
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap(corr_SH50.mean(axis = 0), annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;SH50&quot;, fontsize=21)
+fig.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap(corr_HS300.mean(axis = 0), annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;HS300&quot;, fontsize=21)
+fig.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap(corr_ZZ500.mean(axis = 0), annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;ZZ500&quot;, fontsize=21)
+fig.show()
+
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap(corr_SH50.std(axis = 0), annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;SH50&quot;, fontsize=21)
+fig.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap(corr_HS300.std(axis = 0), annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;HS300&quot;, fontsize=21)
+fig.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap(corr_ZZ500.std(axis = 0), annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;ZZ500&quot;, fontsize=21)
+fig.show()
+
+fig = plt.figure(figsize=(15,6))#计算相关强度
+ax = fig.add_subplot(111)
+sns.heatmap((corr_SH50.mean(axis = 0) / corr_SH50.std(axis = 0)).astype(int), annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;SH50&quot;, fontsize=21)
+fig.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap((corr_HS300.mean(axis = 0) / corr_HS300.std(axis = 0)).astype(int), annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;HS300&quot;, fontsize=21)
+fig.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap((corr_ZZ500.mean(axis = 0) / corr_ZZ500.std(axis = 0)).astype(int), annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;ZZ500&quot;, fontsize=21)
+fig.show()
+
+
+</code></pre>
+<pre><code class="language-python">import scipy.stats as st
+def factor_IC_analysis(factorData, index):  
+    if index == 'SH50':
+        index = '000016.XSHG'
+    if index == 'HS300':
+        index = '000300.XSHG'
+    if index == 'ZZ500':
+        index = '000905.XSHG'
+    if index == 'A':
+        index = None
+    IC = []
+    for date in TradeDate[:-1]:
+        if index:
+            #取股票池
+            stockList = get_index_stocks(index, date)
+        else:
+            stockList = list(factorData[date].index)
+        #获取横截面收益率
+        df_close=get_price(stockList, date, TradeDate[TradeDate.index(date)+1], 'daily', ['close'])
+        if df_close.empty:
+            continue
+        #获取收益率的变化比率
+        df_pchg=df_close['close'].iloc[-1,:]/df_close['close'].iloc[0,:]-1
+        R_T = pd.DataFrame()
+        R_T['pchg']=df_pchg
+        IC_Field = []
+        for i in Fields:
+            #获取因子数据
+            factor_data = factorData[date].loc[stockList, i]
+            R_T['factor'] = factor_data
+            R_T = R_T.dropna()
+            IC_Field.append(st.pearsonr(R_T.pchg.rank(), R_T['factor'].rank())[0])
+        IC.append(IC_Field)
+    result = pd.DataFrame(index = TradeDate[:-1], columns = Fields, data = IC)
+    result = result.dropna(how = 'all')
+    return result
+IC_SH50 = factor_IC_analysis(factorData, 'SH50')
+IC_HS300 = factor_IC_analysis(factorData, 'HS300')
+IC_ZZ500 = factor_IC_analysis(factorData, 'ZZ500')
+IC_A = factor_IC_analysis(factorData, 'A')
+
+temp = pd.DataFrame()
+temp['A'] = IC_A.mean()
+temp['SH50'] = IC_SH50.mean()
+temp['HS300'] = IC_HS300.mean()
+temp['ZZ500'] = IC_ZZ500.mean()
+fig.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap(temp, annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;IC Mean&quot;, fontsize=21)
+fig.show()
+
+#IC波动性计算
+Year= ['2014', '2015', '2016', '2017', '2018']
+Fields = ['turnover_ratio', 'pe_ratio', 'market_cap', 'capitalization', 'eps', 'roe', 'inc_net_profit_year_on_year', 'volume']
+total1 = pd.DataFrame()
+total2 = pd.DataFrame()
+total3 = pd.DataFrame()
+total4 = pd.DataFrame()
+for i in range(len(Year)):
+    total1[Year[i]] = IC_A.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+    total2[Year[i]] = IC_SH50.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+    total3[Year[i]] = IC_HS300.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+    total4[Year[i]] = IC_ZZ500.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+x = np.array(range(len(Year)))
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total1.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;A&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total2.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;SH50&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total3.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;HS300&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total4.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;ZZ500&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+</code></pre>
+<pre><code class="language-python">IC_A = abs(IC_A)#计算IC绝对值的平均值
+IC_SH50 = abs(IC_SH50)
+IC_HS300 = abs(IC_HS300)
+IC_ZZ500 = abs(IC_ZZ500)
+temp = pd.DataFrame()
+temp['A'] = IC_A.mean()
+temp['SH50'] = IC_SH50.mean()
+temp['HS300'] = IC_HS300.mean()
+temp['ZZ500'] = IC_ZZ500.mean()
+fig.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap(temp, annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;IC ABS Mean&quot;, fontsize=21)
+fig.show()
+
+#分年度计算并可视化IC年度绝对值的平均值
+Year= ['2014', '2015', '2016', '2017', '2018']
+Fields = ['turnover_ratio', 'pe_ratio', 'market_cap', 'capitalization', 'eps', 'roe', 'inc_net_profit_year_on_year', 'volume']
+total1 = pd.DataFrame()
+total2 = pd.DataFrame()
+total3 = pd.DataFrame()
+total4 = pd.DataFrame()
+for i in range(len(Year)):
+    total1[Year[i]] = IC_A.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+    total2[Year[i]] = IC_SH50.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+    total3[Year[i]] = IC_HS300.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+    total4[Year[i]] = IC_ZZ500.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+x = np.array(range(len(Year)))
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total1.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;A&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total2.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;SH50&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total3.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;HS300&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total4.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;ZZ500&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[Movie Industry Stocks Timing ]]></title>
         <id>https://yshuai99.github.io/post/movie-industry-stocks-timing/</id>
         <link href="https://yshuai99.github.io/post/movie-industry-stocks-timing/">
@@ -1221,149 +1560,6 @@ def handle_data(context, data):
         elif today.month == 5 and today.day &gt; 15 and context.portfolio.positions[security].closeable_amount &gt; 0:
             order_target(security, 0)
             log.info(&quot;Selling %s&quot; % (security))
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Basic MACD Strategy ]]></title>
-        <id>https://yshuai99.github.io/post/basic/</id>
-        <link href="https://yshuai99.github.io/post/basic/">
-        </link>
-        <updated>2021-06-15T02:56:29.000Z</updated>
-        <summary type="html"><![CDATA[<p>This is a MACD strategy based on python 3.6.</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>This is a MACD strategy based on python 3.6.</p>
-<!-- more -->
-<p>This strategies is developed based on Joinquant module (joinquant.com).</p>
-<blockquote>
-<p>Moving average convergence divergence (MACD) is a trend-following momentum indicator that shows the relationship between two moving averages of a security's price.</p>
-</blockquote>
-<h1 id="moving-average-convergence-divergence">Moving Average Convergence Divergence</h1>
-<pre><code class="language-python">import pandas as pd
-import numpy as np
-import talib
-import jqdata #import jq module
-
-
-
-def initialize(context):
-    set_params()
-    set_backtest()
-    run_daily(trade, 'every_bar')
-
-def set_params():
-    g.days=0    
-    g.refresh_rate=10 
-
-def set_backtest():
-    set_benchmark('000905.XSHG') 
-    set_option('use_real_price', True)  
-    log.set_level('order', 'error')
-
-
-def before_trading_start(context):
-    set_slip_fee(context)
-
-# Set slippage
-def set_slip_fee(context):
-    set_slippage(FixedSlippage(0.02)) 
-
-    dt=context.current_dt
-    if dt&gt;datetime.datetime(2013,1, 1):
-        set_order_cost(OrderCost(open_tax=0, close_tax=0.001,                         open_commission=0.0003, 
-        close_commission=0.0003, 
-        close_today_commission=0, min_commission=5), type='stock')
-    else:
-        set_order_cost(OrderCost(open_tax=0, open_commission=0.003,                   close_commission=0.003,
-        close_tax=0.001,min_commission=5), 
-        type='stock')
-
-# Filter for stocks of delisting,  special treatment and paused.
-def paused_filter(security_list):
-    current_data = get_current_data()
-    security_list = [stock for stock in security_list if not current_data[stock].paused]
-    return security_list
-
-
-def delisted_filter(security_list):
-    current_data = get_current_data()
-    security_list = [stock for stock in security_list if not '退' in current_data[stock].name]
-    return security_list
-
-def st_filter(security_list):
-    current_data = get_current_data()
-    security_list = [stock for stock in security_list if not current_data[stock].is_st]
-    return security_list
-
-#######Operation process####### 
-def trade(context):
-    #Get the fundamental data
-    stock_to_choose = get_fundamentals(query(
-        valuation.code, valuation.pe_ratio, 
-        valuation.pb_ratio,valuation.market_cap, 
-        indicator.eps, indicator.inc_net_profit_annual
-    #Filter for some basic conditions
-    ).filter(
-        valuation.pe_ratio &lt; 40,
-        valuation.pe_ratio &gt; 10,
-        indicator.eps &gt; 0.3,
-        indicator.inc_net_profit_annual &gt; 0.30,
-        indicator.roe &gt; 15
-    ).order_by(
-        valuation.pb_ratio.asc()
-    ).limit(
-        50), date=None)
-
-    stockpool = list(stock_to_choose['code'])
-    stockpool = paused_filter(stockpool)
-    stockpool = delisted_filter(stockpool)
-    stockpool = st_filter(stockpool)
-
-    long_list = []
-    short_list = []
-    hold = []
-
-#If it is the date to trade
-    if g.days%g.refresh_rate == 0:
-        for stock in stockpool:
-            prices = attribute_history(stock,300, '1d',['close'])
-            price = array(prices['close'])
-            # Use talib module to calculate the MACD directly
-            macd_tmp = talib.MACD(price, fastperiod=12, slowperiod=26,signalperiod=20)
-            DIF = macd_tmp[0]
-            DEA = macd_tmp[1]
-            MACD = macd_tmp[2]
-
-            #判断MACD走向
-            if MACD[-1] &gt; 0 and MACD[-4] &lt; 0:
-                long_list.append(stock)
-            elif MACD[-1] &lt; 0 and MACD[-4] &gt; 0:
-                short_list.append(stock)
-
-
-
-        stockset = list(context.portfolio.positions.keys())
-
-        for stock in stockset:
-            if stock in short_list:
-                order_target_value(stock, 0) 
-            else:
-                hold.append(stock) #If not in the sell list, then hold it.
-
-        buy_list = []
-        for stock in long_list:
-            if stock not in hold:
-                buy_list.append(stock) # If not in the hold list, then buy it.
-
-        if len(buy_list)==0: 
-            Cash = context.portfolio.available_cash
-        else:
-            Cash = context.portfolio.available_cash/len(buy_list)
-            for stock in buy_list:
-                order_target_value(stock, Cash)        
-        g.days = 1
-    else:
-        g.days += 1
 </code></pre>
 ]]></content>
     </entry>
