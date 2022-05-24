@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://yshuai99.github.io/favicon.ico?v=1653350511010">
+<link rel="shortcut icon" href="https://yshuai99.github.io/favicon.ico?v=1653420438269">
 <link rel="stylesheet" href="https://yshuai99.github.io/styles/main.css">
 
 
@@ -24,7 +24,8 @@
 
 
 
-    <meta name="description" content="Simple Select
+    <meta name="description" content="
+Simple Select
 select classNo, className, institute
 from Class
 
@@ -32,7 +33,7 @@ select distinct institute
 from Class
 
 select * 
-from Clas..." />
+from Cla..." />
     <meta name="keywords" content="" />
   </head>
   <body>
@@ -42,7 +43,7 @@ from Clas..." />
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://yshuai99.github.io">
-        <img src="https://yshuai99.github.io/images/avatar.png?v=1653350511010" class="site-logo">
+        <img src="https://yshuai99.github.io/images/avatar.png?v=1653420438269" class="site-logo">
         <h1 class="site-title">yshuai</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -99,10 +100,11 @@ from Clas..." />
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
             <h2 class="post-title">SELECT queries -01</h2>
-            <div class="post-date">2022-05-23</div>
+            <div class="post-date">2022-05-22</div>
             
             <div class="post-content" v-pre>
-              <h2 id="simple-select">Simple Select</h2>
+              <figure data-type="image" tabindex="1"><img src="https://yshuai99.github.io/post-images/1653352693708.png" alt="" loading="lazy"></figure>
+<h2 id="simple-select">Simple Select</h2>
 <pre><code class="language-SQL">select classNo, className, institute
 from Class
 
@@ -173,6 +175,55 @@ SELECT studentNo , count(*) 门数 , avg(score) 平均分, max(score)最高分
 FROM Score
 GROUP BY studentNo
 HAVING avg (score)&gt;=80
+
+SELECT studentNo, studentName, native, b.classNo , className
+FROM Student a , Class b
+WHERE a.classNo=b.classNo AND institute='会计学院'
+
+SELECT a.studentNo, studentName
+FROM Student a, Course b,Score c
+WHERE b.courseNo=c.courseNo 
+AND c.studentNo=a.studentNo AND b.courseName='计算机原理'
+
+SELECT a.studentNo, studentName, b.courseNo, b.score, c.courseNo, c.score
+FROM Student a , Score b, (SELECT * FROM Score WHERE courseNo='002') c
+WHERE b.courseNo='001'
+AND a.studentNo=b.studentNo 
+AND a.studentNo=c.studentNo
+
+SELECT a.studentNo, studentName, b.courseNo, b.score, c.courseNo, c.score
+FROM Student a , Score b , Score c
+WHERE b.courseNo='001' AND c.courseNo='002'
+AND a.studentNo=b.studentNo AND b.studentNo=c.studentNo
+ORDER BY a.studentNo
+
+SELECT a.studentNo , studentName , sum(creditHour)
+FROM Student a , Course b , Score c
+WHERE a.studentNo=c.studentNo AND c.courseNo=b.courseNo AND score&gt;=60
+GROUP BY a.studentNo, studentName
+HAVING sum(creditHour)&gt;=28
+ORDER BY a .studentNo
+
+SELECT studentName
+FROM Student
+WHERE Student. studentNo IN 
+	(SELECT Score.studentNo FROM Score)
+
+
+SELECT studentNo, studentName, classNo
+FROM Student
+WHERE studentNo IN
+	(SELECT studentNo FROM Score WHERE courseNo IN
+		(SELECT courseNo FROM Course WHERE courseName LIKE '%系统'))
+
+SELECT studentNo, courseNo, score
+FROM Score
+WHERE score &gt;ALL(SELECT score 
+					FROM Score WHERE courseNo='002' )
+
+SELECT studentNo, courseNo, score
+FROM Score
+WHERE score =(SELECT max(score) FROM Score)
 </code></pre>
 
             </div>
@@ -180,9 +231,9 @@ HAVING avg (score)&gt;=80
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://yshuai99.github.io/post/dml-exercise-01/">
+                <a href="https://yshuai99.github.io/post/introduction/">
                   <h3 class="post-title">
-                    DML exercise -01
+                    Introduction
                   </h3>
                 </a>
               </div>

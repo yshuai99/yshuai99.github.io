@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://yshuai99.github.io/favicon.ico?v=1653350511010">
+<link rel="shortcut icon" href="https://yshuai99.github.io/favicon.ico?v=1653420438269">
 <link rel="stylesheet" href="https://yshuai99.github.io/styles/main.css">
 
 
@@ -26,8 +26,9 @@
 
     <meta name="description" content="I analyzed the collinearity, exposure and IC of 8 fundamental factors in China stock market.
 
-" />
-    <meta name="keywords" content="" />
+from jqdata import *
+impor..." />
+    <meta name="keywords" content="python,Quantative Trading" />
   </head>
   <body>
     <div id="app" class="main">
@@ -36,7 +37,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://yshuai99.github.io">
-        <img src="https://yshuai99.github.io/images/avatar.png?v=1653350511010" class="site-logo">
+        <img src="https://yshuai99.github.io/images/avatar.png?v=1653420438269" class="site-logo">
         <h1 class="site-title">yshuai</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -93,13 +94,352 @@
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
             <h2 class="post-title">Effectiveness of Some Fundamental Factors in China Stock Market(In Progress)</h2>
-            <div class="post-date">2021-06-24</div>
+            <div class="post-date">2021-06-23</div>
             
             <div class="post-content" v-pre>
               <p>I analyzed the collinearity, exposure and IC of 8 fundamental factors in China stock market.</p>
 <!-- more -->
+<pre><code class="language-python">from jqdata import *
+import datetime
+import pandas as pd
+import numpy as np
+from six import StringIO
+import warnings
+import time
+import pickle
+from jqfactor import winsorize_med
+from jqfactor import neutralize
+from jqfactor import standardlize
+import statsmodels.api as sm
+warnings.filterwarnings(&quot;ignore&quot;)
+matplotlib.rcParams['axes.unicode_minus']=False
+</code></pre>
+<pre><code class="language-python">import matplotlib.pyplot as plt
+
+Fields = ['turnover_ratio', 'pe_ratio', 'market_cap', 'capitalization', 'eps', 'roe', 'inc_net_profit_year_on_year', 'volume']
+def getExplore(index):
+    if index == 'SH50':
+        index = '000016.XSHG'
+    if index == 'HS300':
+        index = '000300.XSHG'
+    if index == 'ZZ500':
+        index = '000905.XSHG'
+    explore = pd.DataFrame(index = TradeDate)
+    for i in Fields:#对于每一个单独的因子
+        tempExplore = []
+        for date in TradeDate:
+            stockList = get_index_stocks(index, date)#获取指定日期的股票列表
+            temp = factorData[date][[i]]#对于每一支股票和单独的因子，在每一个交易日下
+            temp = temp.sort([i],ascending = False)#将每日因子从大到小排列
+            temp['rank'] = range(len(temp)+1, 1, -1)#给排列好的因子加上序号
+            #获取因子在某一交易日的暴露度
+            tempExplore.append((temp.loc[stockList,'rank'].mean() - len(temp) / 2) / len(temp))
+        explore[i] = tempExplore
+    return explore
+result_SH50 = []
+result_HS300 = []
+result_ZZ500 = []
+explore1 = getExplore('SH50')
+explore2 = getExplore('HS300')
+explore3 = getExplore('ZZ500')
+for i in Fields:#获取因子的平均暴露度
+    result_SH50.append(explore1[i].mean())
+    result_HS300.append(explore2[i].mean())
+    result_ZZ500.append(explore3[i].mean())
+</code></pre>
+<pre><code class="language-python">Year= ['2014', '2015', '2016', '2017', '2018']
+Fields = ['turnover_ratio', 'pe_ratio', 'market_cap', 'capitalization', 'eps', 'roe', 'inc_net_profit_year_on_year', 'volume']
+total1 = pd.DataFrame()
+total2 = pd.DataFrame()
+total3 = pd.DataFrame()
+for i in range(len(Year)):#获取因子的年度平均暴露度
+    total1[Year[i]] = explore1.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+    total2[Year[i]] = explore2.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+    total3[Year[i]] = explore3.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+x = np.array(range(len(Year)))
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total1.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;SH50&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+x = np.array(range(len(Year)))
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total2.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;HS300&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+x = np.array(range(len(Year)))
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total3.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;ZZ500&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+</code></pre>
+<pre><code class="language-python">def getCorr(index):#计算相关性
+    if index == 'SH50':
+        index = '000016.XSHG'
+    if index == 'HS300':
+        index = '000300.XSHG'
+    if index == 'ZZ500':
+        index = '000905.XSHG'
+    corr = {}
+    for date in TradeDate:
+        stockList = get_index_stocks(index, date)
+        temp = factorData[date].loc[stockList,:]
+        corr[date] = temp.corr()
+    corr = pd.Panel.from_dict(corr)
+    return corr
+corr_SH50 = getCorr('SH50')
+corr_HS300 = getCorr('HS300')
+corr_ZZ500 = getCorr('ZZ500')
+
+import seaborn as sns#计算相关性标准差，由corr_.mean实现
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap(corr_SH50.mean(axis = 0), annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;SH50&quot;, fontsize=21)
+fig.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap(corr_HS300.mean(axis = 0), annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;HS300&quot;, fontsize=21)
+fig.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap(corr_ZZ500.mean(axis = 0), annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;ZZ500&quot;, fontsize=21)
+fig.show()
+
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap(corr_SH50.std(axis = 0), annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;SH50&quot;, fontsize=21)
+fig.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap(corr_HS300.std(axis = 0), annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;HS300&quot;, fontsize=21)
+fig.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap(corr_ZZ500.std(axis = 0), annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;ZZ500&quot;, fontsize=21)
+fig.show()
+
+fig = plt.figure(figsize=(15,6))#计算相关强度
+ax = fig.add_subplot(111)
+sns.heatmap((corr_SH50.mean(axis = 0) / corr_SH50.std(axis = 0)).astype(int), annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;SH50&quot;, fontsize=21)
+fig.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap((corr_HS300.mean(axis = 0) / corr_HS300.std(axis = 0)).astype(int), annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;HS300&quot;, fontsize=21)
+fig.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap((corr_ZZ500.mean(axis = 0) / corr_ZZ500.std(axis = 0)).astype(int), annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;ZZ500&quot;, fontsize=21)
+fig.show()
+
+
+</code></pre>
+<pre><code class="language-python">import scipy.stats as st
+def factor_IC_analysis(factorData, index):  
+    if index == 'SH50':
+        index = '000016.XSHG'
+    if index == 'HS300':
+        index = '000300.XSHG'
+    if index == 'ZZ500':
+        index = '000905.XSHG'
+    if index == 'A':
+        index = None
+    IC = []
+    for date in TradeDate[:-1]:
+        if index:
+            #取股票池
+            stockList = get_index_stocks(index, date)
+        else:
+            stockList = list(factorData[date].index)
+        #获取横截面收益率
+        df_close=get_price(stockList, date, TradeDate[TradeDate.index(date)+1], 'daily', ['close'])
+        if df_close.empty:
+            continue
+        #获取收益率的变化比率
+        df_pchg=df_close['close'].iloc[-1,:]/df_close['close'].iloc[0,:]-1
+        R_T = pd.DataFrame()
+        R_T['pchg']=df_pchg
+        IC_Field = []
+        for i in Fields:
+            #获取因子数据
+            factor_data = factorData[date].loc[stockList, i]
+            R_T['factor'] = factor_data
+            R_T = R_T.dropna()
+            IC_Field.append(st.pearsonr(R_T.pchg.rank(), R_T['factor'].rank())[0])
+        IC.append(IC_Field)
+    result = pd.DataFrame(index = TradeDate[:-1], columns = Fields, data = IC)
+    result = result.dropna(how = 'all')
+    return result
+IC_SH50 = factor_IC_analysis(factorData, 'SH50')
+IC_HS300 = factor_IC_analysis(factorData, 'HS300')
+IC_ZZ500 = factor_IC_analysis(factorData, 'ZZ500')
+IC_A = factor_IC_analysis(factorData, 'A')
+
+temp = pd.DataFrame()
+temp['A'] = IC_A.mean()
+temp['SH50'] = IC_SH50.mean()
+temp['HS300'] = IC_HS300.mean()
+temp['ZZ500'] = IC_ZZ500.mean()
+fig.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap(temp, annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;IC Mean&quot;, fontsize=21)
+fig.show()
+
+#IC波动性计算
+Year= ['2014', '2015', '2016', '2017', '2018']
+Fields = ['turnover_ratio', 'pe_ratio', 'market_cap', 'capitalization', 'eps', 'roe', 'inc_net_profit_year_on_year', 'volume']
+total1 = pd.DataFrame()
+total2 = pd.DataFrame()
+total3 = pd.DataFrame()
+total4 = pd.DataFrame()
+for i in range(len(Year)):
+    total1[Year[i]] = IC_A.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+    total2[Year[i]] = IC_SH50.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+    total3[Year[i]] = IC_HS300.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+    total4[Year[i]] = IC_ZZ500.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+x = np.array(range(len(Year)))
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total1.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;A&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total2.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;SH50&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total3.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;HS300&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total4.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;ZZ500&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+</code></pre>
+<pre><code class="language-python">IC_A = abs(IC_A)#计算IC绝对值的平均值
+IC_SH50 = abs(IC_SH50)
+IC_HS300 = abs(IC_HS300)
+IC_ZZ500 = abs(IC_ZZ500)
+temp = pd.DataFrame()
+temp['A'] = IC_A.mean()
+temp['SH50'] = IC_SH50.mean()
+temp['HS300'] = IC_HS300.mean()
+temp['ZZ500'] = IC_ZZ500.mean()
+fig.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+sns.heatmap(temp, annot=True, vmax=1, vmin = 0)
+ax.set_title(&quot;IC ABS Mean&quot;, fontsize=21)
+fig.show()
+
+#分年度计算并可视化IC年度绝对值的平均值
+Year= ['2014', '2015', '2016', '2017', '2018']
+Fields = ['turnover_ratio', 'pe_ratio', 'market_cap', 'capitalization', 'eps', 'roe', 'inc_net_profit_year_on_year', 'volume']
+total1 = pd.DataFrame()
+total2 = pd.DataFrame()
+total3 = pd.DataFrame()
+total4 = pd.DataFrame()
+for i in range(len(Year)):
+    total1[Year[i]] = IC_A.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+    total2[Year[i]] = IC_SH50.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+    total3[Year[i]] = IC_HS300.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+    total4[Year[i]] = IC_ZZ500.iloc[i*len(explore1)/5:(i+1)*len(explore1)/5,:].mean()
+x = np.array(range(len(Year)))
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total1.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;A&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total2.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;SH50&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total3.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;HS300&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+fig = plt.figure(figsize=(15,6))
+ax = fig.add_subplot(111)
+for i in Fields:
+    plt.bar(x, total4.loc[i], 0.3, label = i)
+plt.xticks(range(len(Year)), Year)
+ax.set_title(&quot;ZZ500&quot;, fontsize=21)
+# 添加图例
+plt.legend()
+plt.show()
+
+</code></pre>
 
             </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://yshuai99.github.io/tag/SCyFn5SDi/" class="tag">
+                    python
+                  </a>
+                
+                  <a href="https://yshuai99.github.io/tag/AH91WmPtY/" class="tag">
+                    Quantative Trading
+                  </a>
+                
+              </div>
             
             
 
