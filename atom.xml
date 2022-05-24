@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2022-05-24T20:09:16.795Z</updated>
+    <updated>2022-05-24T20:15:06.379Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -145,7 +145,7 @@ WHERE score =(SELECT max(score) FROM Score)
         <id>https://yshuai99.github.io/post/introduction/</id>
         <link href="https://yshuai99.github.io/post/introduction/">
         </link>
-        <updated>2022-05-18T19:38:45.000Z</updated>
+        <updated>2022-05-18T08:38:45.000Z</updated>
         <summary type="html"><![CDATA[<p>Here is Yuxin Shuai. I am working on quantitative trading and data analysis.</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>Here is Yuxin Shuai. I am working on quantitative trading and data analysis.</p>
@@ -176,12 +176,8 @@ WHERE score =(SELECT max(score) FROM Score)
 </ul>
 <h2 id="reports">Reports:</h2>
 <ul>
-<li>
-<p><a href="https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market-/">The performance of macroeconomic factors timing in Chinese stock market </a></p>
-</li>
-<li>
-<p><a href="https://yshuai99.github.io/post/fundamental-factors/">Effectiveness of Some Fundamental Factors in China Stock Market</a></p>
-</li>
+<li><a href="https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market-/">The performance of macroeconomic factors timing in Chinese stock market </a></li>
+<li><a href="https://yshuai99.github.io/post/fundamental-factors/">Effectiveness of Some Fundamental Factors in China Stock Market</a></li>
 </ul>
 <h2 id="projects">Projects:</h2>
 <ul>
