@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2022-05-24T19:51:19.534Z</updated>
+    <updated>2022-05-24T19:53:48.254Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -1111,6 +1111,54 @@ df_pct[['net_value','net_value_timing']].plot(figsize=(15,6),title='宏观指标
 ]]></content>
     </entry>
     <entry>
+        <title type="html"><![CDATA[Mean-Variance portfolio with optimization (In progress)]]></title>
+        <id>https://yshuai99.github.io/post/mv/</id>
+        <link href="https://yshuai99.github.io/post/mv/">
+        </link>
+        <updated>2021-06-24T04:19:20.000Z</updated>
+        <summary type="html"><![CDATA[<p>Here is the R code and examples for Mean-Variance portfolio with optimization.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Here is the R code and examples for Mean-Variance portfolio with optimization.</p>
+<!-- more -->
+<pre><code class="language-R">library(BurStFin)
+sigma &lt;- var.shrink.eqcor(rets[,-61])
+wgt_ew &lt;- rep(1/ncol(sigma),ncol(sigma))
+wgt_mc &lt;- a1_tsx60memb$Weight
+wgt_beta &lt;- (1/dat$Beta)/sum(1/dat$Beta)
+wgt_fncls &lt;- ifelse(a1_tsx60memb$GICS.Sector == &quot;Financials&quot;,1,0)/sum(ifelse(a1_tsx60memb$GICS.Sector == wgt_large &lt;- ifelse(a1_tsx60memb$Size == &quot;Large&quot;,1,0)/sum(ifelse(a1_tsx60memb$Size == &quot;Large&quot;,1,0))
+wgt_mid &lt;- ifelse(a1_tsx60memb$Size == &quot;Mid&quot;,1,0)/sum(ifelse(a1_tsx60memb$Size == &quot;Mid&quot;,1,0))
+wgt_small &lt;- ifelse(a1_tsx60memb$Size == &quot;Small&quot;,1,0)/sum(ifelse(a1_tsx60memb$Size == &quot;Small&quot;,1,0))
+wgt_matrix &lt;- data.frame(cbind(wgt_ew,wgt_mc,wgt_beta,wgt_fncls,wgt_large,wgt_mid,wgt_small))
+
+#confirm portfolio weights sum to 100%
+apply(wgt_matrix,2,sum)
+
+## wgt_ew wgt_mc wgt_beta wgt_fncls wgt_large wgt_mid wgt_small
+## 1 1 1 1 1 1 1
+# calculate portfolio vols
+# equal weight
+p1 &lt;- sqrt(t(as.matrix(wgt_matrix[,1]))%*%sigma%*%as.matrix(wgt_matrix[,1]))
+# market cap
+p2 &lt;- sqrt(t(as.matrix(wgt_matrix[,2]))%*%sigma%*%as.matrix(wgt_matrix[,2]))
+# inverse beta weighted
+p3 &lt;- sqrt(t(as.matrix(wgt_matrix[,3]))%*%sigma%*%as.matrix(wgt_matrix[,3]))
+# financials only equally weighted
+p4 &lt;- sqrt(t(as.matrix(wgt_matrix[,4]))%*%sigma%*%as.matrix(wgt_matrix[,4]))
+# large cap only equally weighted
+p5 &lt;- sqrt(t(as.matrix(wgt_matrix[,5]))%*%sigma%*%as.matrix(wgt_matrix[,5]))
+# mid cap only equally weighted
+p6 &lt;- sqrt(t(as.matrix(wgt_matrix[,6]))%*%sigma%*%as.matrix(wgt_matrix[,6]))
+#small cap only equally weighted
+p7 &lt;- sqrt(t(as.matrix(wgt_matrix[,7]))%*%sigma%*%as.matrix(wgt_matrix[,7]))
+results_vector &lt;- c(p1, p2, p3, p4, p5, p6, p7)
+names(results_vector) &lt;- c(&quot;Equal&quot;,&quot;MktCap&quot;,&quot;Inv.Beta&quot;,&quot;Financials&quot;,&quot;Large&quot;,&quot;Mid&quot;,&quot;Small&quot;)
+results_vector
+
+barplot(results_vector,las=2)
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[Fama-Macbeth Regression (In progress)]]></title>
         <id>https://yshuai99.github.io/post/fm_regression/</id>
         <link href="https://yshuai99.github.io/post/fm_regression/">
@@ -1648,82 +1696,6 @@ ax.set_title(&quot;ZZ500&quot;, fontsize=21)
 plt.legend()
 plt.show()
 
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Movie Industry Stocks Timing ]]></title>
-        <id>https://yshuai99.github.io/post/movie-industry-stocks-timing/</id>
-        <link href="https://yshuai99.github.io/post/movie-industry-stocks-timing/">
-        </link>
-        <updated>2021-06-15T15:37:57.000Z</updated>
-        <summary type="html"><![CDATA[<p>This strategy is based on python 3.6 and jq module.</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>This strategy is based on python 3.6 and jq module.</p>
-<!-- more -->
-<p>This strategy is developed based on jq module (joinquant.com)</p>
-<p>In China, there are a lot of holidays between December and June, I will hold suitable stocks from movie industries during this time.</p>
-<h2 id="code">code</h2>
-<pre><code class="language-python">import jqdata
-
-
-def initialize(context):
-    set_option('use_real_price', True)
-    set_benchmark('000300.XSHG')
-    # R86 indicate the movie industry
-    stocks = get_industry_stocks('R86')
-    
-    # Filter for suitable stocks
-    fundamental_df = get_fundamentals(
-        query(
-            indicator.roe,
-            indicator.gross_profit_margin,
-            valuation.pb_ratio, valuation.code,cash_flow.subtotal_operate_cash_inflow           
-        )
-        .filter(
-            valuation.code.in_ (stocks)
-        )
-        .filter(
-            indicator.roe&gt;0
-        )
-        .filter(
-            indicator.gross_profit_margin&gt;0.3
-        )
-        .filter(
-            valuation.pb_ratio&lt;3
-        )
-        .filter(
-            cash_flow.subtotal_operate_cash_inflow&gt;0
-        )
-        .order_by(
-            valuation.pb_ratio.asc()
-        )
-        .limit(10)
-        
-    )
-    g.stocks = fundamental_df['code']
-    
-
-def handle_data(context, data):
-    if len(g.stocks)==0: 
-        cash = context.portfolio.available_cash
-    else:
-        cash = context.portfolio.available_cash/len(g.stocks)
-    
-    hist = history(1,'1d','close',g.stocks)
- 
-    for security in g.stocks:
-        today = context.current_dt
-        current_price = hist[security][0]
-        # Hold the stock during December to June
-        if today.month == 12 and today.day &gt; 1 and cash &gt; current_price and context.portfolio.positions[security].closeable_amount == 0:
-            order_value(security, cash)
-            log.info(&quot;Buying %s&quot; % (security))
-            
-        elif today.month == 6 and today.day &gt; 12 and context.portfolio.positions[security].closeable_amount &gt; 0:
-            order_target(security, 0)
-
-            log.info(&quot;Selling %s&quot; % (security))
 </code></pre>
 ]]></content>
     </entry>

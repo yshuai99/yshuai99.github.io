@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>Introduction | yshuai</title>
+<title>Mean-Variance portfolio with optimization (In progress) | yshuai</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -24,10 +24,10 @@
 
 
 
-    <meta name="description" content="Here is Yuxin Shuai. I am working on quantitative trading and data analysis.
+    <meta name="description" content="Here is the R code and examples for Mean-Variance portfolio with optimization.
 
-Here is the contents of this blog:
-Small p..." />
+library(BurStFin)
+sigma &lt;- var.shrink..." />
     <meta name="keywords" content="" />
   </head>
   <body>
@@ -93,59 +93,57 @@ Small p..." />
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">Introduction</h2>
-            <div class="post-date">2022-05-19</div>
+            <h2 class="post-title">Mean-Variance portfolio with optimization (In progress)</h2>
+            <div class="post-date">2021-06-24</div>
             
             <div class="post-content" v-pre>
-              <p>Here is Yuxin Shuai. I am working on quantitative trading and data analysis.</p>
+              <p>Here is the R code and examples for Mean-Variance portfolio with optimization.</p>
 <!-- more -->
-<p>Here is the contents of this blog:</p>
-<h2 id="small-projects-for-fun">Small projects for FUN:</h2>
-<ul>
-<li>
-<p><a href="https://yshuai99.github.io/post/difflib/">Difference visualization between two csv file</a></p>
-</li>
-<li>
-<p><a href="https://yshuai99.github.io/post/crawler01/">Web crawler with Python -01 (douban movies TOP 250)</a></p>
-</li>
-</ul>
-<h2 id="sql-exercise">SQL exercise:</h2>
-<ul>
-<li><a href="">DML exercise -01</a></li>
-<li><a href="">DML exercise -02</a></li>
-</ul>
-<h2 id="technological-analysis">Technological analysis:</h2>
-<ul>
-<li><a href="https://yshuai99.github.io/post/hollween-effect-strategy/">Holloween effect strategy</a></li>
-<li><a href="https://yshuai99.github.io/post/movie-industry-stocks-timing/">Movie industry stocks timing</a></li>
-<li><a href="https://yshuai99.github.io/post/golden-cross-strategy/">Golden cross strategy</a></li>
-<li><a href="https://yshuai99.github.io/post/basic/">Basic MACD strategy</a></li>
-<li><a href="https://yshuai99.github.io/post/triangular-arbitrage/">Triangular Arbitrage </a></li>
-<li><a href="https://yshuai99.github.io/post/pairs-trading-in-progress_/">Pairs Trading</a></li>
-</ul>
-<h2 id="reports">Reports:</h2>
-<ul>
-<li>
-<p><a href="https://yshuai99.github.io/post/the-performance-of-macroeconomic-factors-timing-in-chinese-stock-market-/">The performance of macroeconomic factors timing in Chinese stock market </a></p>
-</li>
-<li>
-<p><a href="https://yshuai99.github.io/post/fundamental-factors/">Effectiveness of Some Fundamental Factors in China Stock Market</a></p>
-</li>
-</ul>
-<h2 id="projects">Projects:</h2>
-<ul>
-<li>[Fama-Macbeth Regression (In progress)]</li>
-<li>[Mean-Variance portfolio with optimization (In progress)]</li>
-</ul>
+<pre><code class="language-R">library(BurStFin)
+sigma &lt;- var.shrink.eqcor(rets[,-61])
+wgt_ew &lt;- rep(1/ncol(sigma),ncol(sigma))
+wgt_mc &lt;- a1_tsx60memb$Weight
+wgt_beta &lt;- (1/dat$Beta)/sum(1/dat$Beta)
+wgt_fncls &lt;- ifelse(a1_tsx60memb$GICS.Sector == &quot;Financials&quot;,1,0)/sum(ifelse(a1_tsx60memb$GICS.Sector == wgt_large &lt;- ifelse(a1_tsx60memb$Size == &quot;Large&quot;,1,0)/sum(ifelse(a1_tsx60memb$Size == &quot;Large&quot;,1,0))
+wgt_mid &lt;- ifelse(a1_tsx60memb$Size == &quot;Mid&quot;,1,0)/sum(ifelse(a1_tsx60memb$Size == &quot;Mid&quot;,1,0))
+wgt_small &lt;- ifelse(a1_tsx60memb$Size == &quot;Small&quot;,1,0)/sum(ifelse(a1_tsx60memb$Size == &quot;Small&quot;,1,0))
+wgt_matrix &lt;- data.frame(cbind(wgt_ew,wgt_mc,wgt_beta,wgt_fncls,wgt_large,wgt_mid,wgt_small))
+
+#confirm portfolio weights sum to 100%
+apply(wgt_matrix,2,sum)
+
+## wgt_ew wgt_mc wgt_beta wgt_fncls wgt_large wgt_mid wgt_small
+## 1 1 1 1 1 1 1
+# calculate portfolio vols
+# equal weight
+p1 &lt;- sqrt(t(as.matrix(wgt_matrix[,1]))%*%sigma%*%as.matrix(wgt_matrix[,1]))
+# market cap
+p2 &lt;- sqrt(t(as.matrix(wgt_matrix[,2]))%*%sigma%*%as.matrix(wgt_matrix[,2]))
+# inverse beta weighted
+p3 &lt;- sqrt(t(as.matrix(wgt_matrix[,3]))%*%sigma%*%as.matrix(wgt_matrix[,3]))
+# financials only equally weighted
+p4 &lt;- sqrt(t(as.matrix(wgt_matrix[,4]))%*%sigma%*%as.matrix(wgt_matrix[,4]))
+# large cap only equally weighted
+p5 &lt;- sqrt(t(as.matrix(wgt_matrix[,5]))%*%sigma%*%as.matrix(wgt_matrix[,5]))
+# mid cap only equally weighted
+p6 &lt;- sqrt(t(as.matrix(wgt_matrix[,6]))%*%sigma%*%as.matrix(wgt_matrix[,6]))
+#small cap only equally weighted
+p7 &lt;- sqrt(t(as.matrix(wgt_matrix[,7]))%*%sigma%*%as.matrix(wgt_matrix[,7]))
+results_vector &lt;- c(p1, p2, p3, p4, p5, p6, p7)
+names(results_vector) &lt;- c(&quot;Equal&quot;,&quot;MktCap&quot;,&quot;Inv.Beta&quot;,&quot;Financials&quot;,&quot;Large&quot;,&quot;Mid&quot;,&quot;Small&quot;)
+results_vector
+
+barplot(results_vector,las=2)
+</code></pre>
 
             </div>
             
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://yshuai99.github.io/post/difflib/">
+                <a href="https://yshuai99.github.io/post/fm_regression/">
                   <h3 class="post-title">
-                    Difference visualization between two csv file
+                    Fama-Macbeth Regression (In progress)
                   </h3>
                 </a>
               </div>
