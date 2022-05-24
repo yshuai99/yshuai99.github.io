@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2022-05-24T19:53:48.254Z</updated>
+    <updated>2022-05-24T19:54:51.606Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -145,7 +145,7 @@ WHERE score =(SELECT max(score) FROM Score)
         <id>https://yshuai99.github.io/post/introduction/</id>
         <link href="https://yshuai99.github.io/post/introduction/">
         </link>
-        <updated>2022-05-19T17:38:45.000Z</updated>
+        <updated>2022-05-19T06:38:45.000Z</updated>
         <summary type="html"><![CDATA[<p>Here is Yuxin Shuai. I am working on quantitative trading and data analysis.</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>Here is Yuxin Shuai. I am working on quantitative trading and data analysis.</p>
@@ -185,8 +185,8 @@ WHERE score =(SELECT max(score) FROM Score)
 </ul>
 <h2 id="projects">Projects:</h2>
 <ul>
-<li>[Fama-Macbeth Regression (In progress)]</li>
-<li>[Mean-Variance portfolio with optimization (In progress)]</li>
+<li><a href="">Fama-Macbeth Regression </a></li>
+<li><a href="">Mean-Variance portfolio with optimization </a></li>
 </ul>
 ]]></content>
     </entry>
@@ -1111,11 +1111,11 @@ df_pct[['net_value','net_value_timing']].plot(figsize=(15,6),title='宏观指标
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Mean-Variance portfolio with optimization (In progress)]]></title>
+        <title type="html"><![CDATA[Mean-Variance portfolio with optimization ]]></title>
         <id>https://yshuai99.github.io/post/mv/</id>
         <link href="https://yshuai99.github.io/post/mv/">
         </link>
-        <updated>2021-06-24T04:19:20.000Z</updated>
+        <updated>2021-06-23T17:19:20.000Z</updated>
         <summary type="html"><![CDATA[<p>Here is the R code and examples for Mean-Variance portfolio with optimization.</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>Here is the R code and examples for Mean-Variance portfolio with optimization.</p>
@@ -1159,11 +1159,11 @@ barplot(results_vector,las=2)
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Fama-Macbeth Regression (In progress)]]></title>
+        <title type="html"><![CDATA[Fama-Macbeth Regression]]></title>
         <id>https://yshuai99.github.io/post/fm_regression/</id>
         <link href="https://yshuai99.github.io/post/fm_regression/">
         </link>
-        <updated>2021-06-24T04:18:26.000Z</updated>
+        <updated>2021-06-23T17:18:26.000Z</updated>
         <summary type="html"><![CDATA[<p>Here is the R code and examples for Fama-Macbeth Regression.</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>Here is the R code and examples for Fama-Macbeth Regression.</p>
