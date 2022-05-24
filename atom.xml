@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://yshuai99.github.io</id>
     <title>yshuai</title>
-    <updated>2022-05-24T19:41:35.355Z</updated>
+    <updated>2022-05-24T19:51:19.534Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://yshuai99.github.io"/>
     <link rel="self" href="https://yshuai99.github.io/atom.xml"/>
@@ -1111,6 +1111,208 @@ df_pct[['net_value','net_value_timing']].plot(figsize=(15,6),title='宏观指标
 ]]></content>
     </entry>
     <entry>
+        <title type="html"><![CDATA[Fama-Macbeth Regression (In progress)]]></title>
+        <id>https://yshuai99.github.io/post/fm_regression/</id>
+        <link href="https://yshuai99.github.io/post/fm_regression/">
+        </link>
+        <updated>2021-06-24T04:18:26.000Z</updated>
+        <summary type="html"><![CDATA[<p>Here is the R code and examples for Fama-Macbeth Regression.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Here is the R code and examples for Fama-Macbeth Regression.</p>
+<!-- more -->
+<pre><code class="language-R">ncol.ind &lt;- ncol(indurf.xts)
+nrow.ind &lt;- nrow(indurf.xts)
+CAPM.Betas &lt;- matrix(0,ncol.ind,1)
+for (i in 1:ncol.ind) {
+    lmCAPM &lt;- lm(indurf.xts[,i] ~ factors.xts$Mkt.RF)
+    CAPM.Betas[i,1] = summary(lmCAPM)$coef[2,1]
+}
+rownames(CAPM.Betas) &lt;- colnames(indurf.xts)
+</code></pre>
+<pre><code class="language-R"># Cross Sectional Regression
+CAPM.Alphas &lt;- matrix(0,nrow.ind,ncol.ind)
+CAPM.Lambda &lt;- matrix(0,nrow.ind,1)
+CAPM.R_squared &lt;- rep(0,nrow.ind)
+CAPM.t_Stat &lt;- rep(0,nrow.ind)
+CAPM.intercept &lt;- rep(0,nrow.ind)
+tindurf.xts = t(indurf.xts)
+for (i in 1:nrow.ind) {
+    lmCAPM_cross = lm(tindurf.xts[,i] ~ CAPM.Betas )
+    CAPM.Alphas[i,] &lt;- lmCAPM_cross$residuals
+    CAPM.Lambda[i,1] &lt;- summary(lmCAPM_cross)$coef[2,1]
+    CAPM.R_squared[i] &lt;- summary(lmCAPM_cross)$adj.r.squared
+    CAPM.t_Stat[i] &lt;- summary(lmCAPM_cross)$coef[1,3]
+    CAPM.intercept[i] &lt;- lmCAPM_cross$coefficients[1]
+}
+# risk premium for each factor as average values
+Risk_PremiumCAPM = colMeans(CAPM.Lambda)
+</code></pre>
+<h2 id="three-factors">Three factors</h2>
+<pre><code class="language-R"># Time series regression
+FamaF3.Betas &lt;- matrix(0,ncol.ind,3)
+for (i in 1:ncol.ind) {
+    lmFamaF3 &lt;- lm(indurf.xts[,i] ~ factors.xts$Mkt.RF + factors.xts$SMB
+                            + factors.xts$HML)
+    FamaF3.Betas[i,1] = summary(lmFamaF3)$coef[2,1]
+    FamaF3.Betas[i,2] = summary(lmFamaF3)$coef[3,1]
+    FamaF3.Betas[i,3] = summary(lmFamaF3)$coef[4,1]
+}
+rownames(FamaF3.Betas) &lt;- colnames(indurf.xts)
+colnames(FamaF3.Betas) &lt;- c(&quot;Mkt.Rf&quot;,&quot;SMB&quot;,&quot;HML&quot;)
+FamaF3.Betas
+
+Fama3.intercept = rep(0,nrow.ind)
+Fama3.Lambda = matrix(0,nrow.ind,3)
+Fama3.R_squared = rep(0,nrow.ind)
+Fama3.t_Stat = rep(0,nrow.ind)
+Fama3.Alphas = matrix(0,nrow.ind,ncol.ind)
+for (i in 1:nrow.ind) {
+    lmFama3_cross = lm(tindurf.xts[,i] ~ FamaF3.Betas[,1] +
+    FamaF3.Betas[,2] + FamaF3.Betas[,3] )
+    Fama3.intercept[i] &lt;- lmFama3_cross$coef[1]
+    Fama3.Lambda[i,1] &lt;- summary(lmFama3_cross)$coef[2,1]
+    Fama3.Lambda[i,2] &lt;- summary(lmFama3_cross)$coef[3,1]
+    Fama3.Lambda[i,3] &lt;- summary(lmFama3_cross)$coef[4,1]
+    Fama3.R_squared[i] &lt;- summary(lmFama3_cross)$adj.r.squared
+    Fama3.t_Stat[i] &lt;- summary(lmFama3_cross)$coef[1,3]
+    Fama3.Alphas[i,] &lt;-lmFama3_cross$residuals
+}
+# risk premium for each factor as average values
+colnames(Fama3.Lambda) &lt;- colnames(factors.xts[,3:5])
+rownames(Fama3.Lambda) &lt;- rownames(indurf.xts)
+Risk_PremiumF3 &lt;- colMeans(Fama3.Lambda)
+print(Risk_PremiumF3)
+</code></pre>
+<h2 id="forecasting">Forecasting</h2>
+<pre><code class="language-R">#CAPM FORECAST
+# We construct the forecast model for each quarter to predict the next quarter returns
+# We keep updating the model as we move on to the next forecast i.e we use the previous quarterly data obtained forecast_betasMR &lt;- matrix(0,nrow(indurf.xts)/3,ncol(indurf.xts))
+#obtaining betas for each forecast
+k=1;
+for (j in seq(1,nrow(indurf.xts),3)){
+    for(i in 1:ncol(indurf.xts)){
+        Lr1 &lt;- lm(indurf.xts[1:(j+2),i] ~ factors.xts$Mkt.RF[1:(j+2)] +      factors.xts$SMB[1:(j+2)] + factors.xts
+        forecast_betasMR[k,i] &lt;- Lr1$coefficients[2]
+    }
+    k=k+1;
+}
+colnames(forecast_betasMR) &lt;- colnames(indurf.xts)
+#obtaining intercept, error, lambda
+forecast_alpha &lt;- matrix(0,nrow(indurf.xts)/3,nrow(indurf.xts))
+forecast_lambda &lt;- matrix(0,nrow(indurf.xts)/3,nrow(indurf.xts))
+forecast_intercept &lt;- matrix(0,nrow(indurf.xts)/3,nrow(indurf.xts))
+lambda_MR &lt;- rep(0,1)
+lambda_SMB &lt;- rep(0,1)
+lambda_HML &lt;- rep(0,1)
+lambda_RMW &lt;- rep(0,1)
+lambda_CMA &lt;- rep(0,1)
+intercept&lt;- rep(0,1)
+alpha &lt;- rep(0,49)
+forecast_lambda &lt;- matrix(0,24,1)
+forecast_alpha &lt;- matrix(0,24,ncol(indurf.xts))
+forecast_intercept &lt;- rep(0,1)
+k=2
+
+for (i in c(2:24) ){
+    alpha &lt;- rep(0,49)
+    for (j in c(1:(3*k))){
+        TEMP &lt;- lm(t(indurf.xts)[,j]~ forecast_betasMR[k,])
+        lambda_MR[j] &lt;- TEMP$coefficients[2]
+        alpha &lt;- alpha+TEMP$residuals
+        intercept[j] &lt;- TEMP$coefficients[1]
+}
+    forecast_lambda[i,] &lt;- c(mean(lambda_MR))
+    forecast_alpha[i,] &lt;- alpha/3
+    forecast_intercept[i] &lt;-mean(intercept)
+    k=k+1
+}
+
+
+#obtaining actual expected returns
+act_exp_ret &lt;- matrix(0,24,ncol(indurf.xts))
+k=2
+for (i in c(2:24) ){
+    for (j in c(1:(3*k))){
+        act_exp_ret[i,] &lt;- apply(indurf.xts[1:(3*k)],2,mean)
+    }
+    k=k+1
+}
+#obtaining forecasted expected returns
+forecast_exp_ret &lt;- rep(0,ncol(indurf.xts))
+for (i in c(2:24) ){
+    forecast_exp_ret &lt;- rbind(forecast_exp_ret,forecast_intercept[i]*rep(1,ncol(indurf.xts)) + forecast_lambda[}
+IC_1 &lt;- rep(0,24)
+for(i in 1:24){
+    IC_1[i] &lt;- cor(forecast_exp_ret[i,],act_exp_ret[i,])
+}
+</code></pre>
+<pre><code class="language-R">#F2M MODEL FORECAST
+# We construct the forecast model for each quarter to predict the next quarter returns
+# We keep updating the model as we move on to the next forecast i.e we use the previous quarterly data obtained forecast_betasMR &lt;- matrix(0,nrow(indurf.xts)/3,ncol(indurf.xts))
+forecast_betasSMB &lt;- matrix(0,nrow(indurf.xts)/3,ncol(indurf.xts))
+#obtaining betas for each forecast
+k=1;
+for (j in seq(1,nrow(indurf.xts),3)){
+    for(i in 1:ncol(indurf.xts)){
+        Lr2 &lt;- lm(indurf.xts[1:(j+2),i] ~ factors.xts$Mkt.RF[1:(j+2)] +    factors.xts$SMB[1:(j+2)])
+        forecast_betasMR[k,i] &lt;- Lr2$coefficients[2]
+        forecast_betasSMB[k,i] &lt;- Lr2$coefficients[3]
+    }
+    k=k+1;
+}
+colnames(forecast_betasMR) &lt;- colnames(indurf.xts)
+colnames(forecast_betasSMB) &lt;- colnames(indurf.xts)
+
+#obtaining intercept, error, lambda
+forecast_alpha &lt;- matrix(0,nrow(indurf.xts)/3,nrow(indurf.xts))
+forecast_lambda &lt;- matrix(0,nrow(indurf.xts)/3,nrow(indurf.xts))
+forecast_intercept &lt;- matrix(0,nrow(indurf.xts)/3,nrow(indurf.xts))
+
+
+lambda_MR &lt;- rep(0,1)
+lambda_SMB &lt;- rep(0,1)
+lambda_HML &lt;- rep(0,1)
+lambda_RMW &lt;- rep(0,1)
+lambda_CMA &lt;- rep(0,1)
+intercept&lt;- rep(0,1)
+alpha &lt;- rep(0,49)
+forecast_lambda &lt;- matrix(0,24,2)
+forecast_alpha &lt;- matrix(0,24,ncol(indurf.xts))
+forecast_intercept &lt;- rep(0,1)
+k=2
+for (i in c(2:24) ){
+    alpha &lt;- rep(0,49)
+    for (j in c(1:(3*k))){
+        TEMP &lt;- lm(t(indurf.xts)[,j]~ forecast_betasMR[k,]+ forecast_betasSMB[k,])
+        lambda_MR[j] &lt;- TEMP$coefficients[2]
+        lambda_SMB[j] &lt;- TEMP$coefficients[3]
+        alpha &lt;- alpha+TEMP$residuals
+        intercept[j] &lt;- TEMP$coefficients[1]
+}
+    forecast_lambda[i,] &lt;- c(mean(lambda_MR),mean(lambda_SMB))
+    forecast_alpha[i,] &lt;- alpha/3
+    forecast_intercept[i] &lt;-mean(intercept)
+    k=k+1
+}
+
+#obtaining realized returns
+act_exp_ret &lt;- matrix(0,24,ncol(indurf.xts))
+k=2
+for (i in c(2:24) ){
+    for (j in c(1:(3*k))){
+        act_exp_ret[i,] &lt;- apply(indurf.xts[1:(3*k)],2,mean)
+    }
+    k=k+1
+}
+#collecting forecasts
+forecast_exp_ret &lt;- rep(0,ncol(indurf.xts))
+for (i in c(2:24) ){
+    forecast_exp_ret &lt;- rbind(forecast_exp_ret,forecast_intercept[i]*rep(1,ncol(indurf.xts)) + forecast_lambda[}
+forecast_exp_ret
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[Effectiveness of Some Fundamental Factors in China Stock Market]]></title>
         <id>https://yshuai99.github.io/post/fundamental-factors/</id>
         <link href="https://yshuai99.github.io/post/fundamental-factors/">
@@ -1521,44 +1723,6 @@ def handle_data(context, data):
         elif today.month == 6 and today.day &gt; 12 and context.portfolio.positions[security].closeable_amount &gt; 0:
             order_target(security, 0)
 
-            log.info(&quot;Selling %s&quot; % (security))
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Hollween Effect Strategy]]></title>
-        <id>https://yshuai99.github.io/post/hollween-effect-strategy/</id>
-        <link href="https://yshuai99.github.io/post/hollween-effect-strategy/">
-        </link>
-        <updated>2021-06-15T15:30:50.000Z</updated>
-        <summary type="html"><![CDATA[<p>The holloween effect strategy is based on python 3.6 and jq module.</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>The holloween effect strategy is based on python 3.6 and jq module.</p>
-<!-- more -->
-<p>The strategy is developed based on jq module (joinquant.com)</p>
-<blockquote></blockquote>
-<p>The Halloween effect is a market-timing strategy based on the hypothesis that stocks perform better between Oct. 31 (Halloween) and May 1 than they do between the beginning of May through the end of October. (Investopedia.com)</p>
-<h2 id="code">code</h2>
-<pre><code class="language-python">def initialize(context):
-    set_option('use_real_price', True)
-
-    # Set up the trading stocks
-    g.stocks = ['000001.XSHE','600000.XSHG','600019.XSHG','600028.XSHG','600030.XSHG','600036.XSHG','600519.XSHG','601398.XSHG','601857.XSHG','601988.XSHG']
-
-
-def handle_data(context, data):
-    cash = context.portfolio.available_cash / len(g.stocks)
-    hist = history(1,'1d','close',g.stocks)
-    for security in g.stocks:
-        today = context.current_dt
-        current_price = hist[security][0]
-        # If the current time is larger than October 15th, buy it.
-        if today.month == 10 and today.day &gt; 15 and cash &gt; current_price and context.portfolio.positions[security].closeable_amount == 0:
-            order_value(security, cash)
-            log.info(&quot;Buying %s&quot; % (security))
-        # If the current time is larger than May 5th, then sell it
-        elif today.month == 5 and today.day &gt; 15 and context.portfolio.positions[security].closeable_amount &gt; 0:
-            order_target(security, 0)
             log.info(&quot;Selling %s&quot; % (security))
 </code></pre>
 ]]></content>
